@@ -3,11 +3,9 @@ const pages = document.querySelectorAll(".main-page");
 
 menuButtons.forEach(function (e) {
 	e.addEventListener("click", function () {
-		if (!e.classList.contains("active-button")) {
-			let activeButton = document.getElementById("active-button");
-			activeButton.id = "";
-			e.id = "active-button";
-		}
+		let activeButton = document.getElementById("active-button");
+		activeButton.id = "";
+		e.id = "active-button";
 		changePages();
 	});
 });
@@ -24,8 +22,4 @@ function changePages() {
 			pages[i].classList.add("opacity-100");
 		}
 	}
-}
-
-function jump() {
-	console.log("jump");
 }

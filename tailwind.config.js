@@ -5,7 +5,7 @@ module.exports = {
 	theme: {
 		extend: {
 			backgroundImage: {
-				"main-image": "url('../src/img/gradient-background.jpg')",
+				"light-image": "url('../src/img/gradient-background.jpg')",
 			},
 		},
 	},

@@ -1,9 +1,7 @@
 const express = require("express");
-
 const app = express();
+const port = 8080;
 
-app.get("/", (request, response) => {
-	response.send("Gordon is not our hero");
-});
+app.use(express.static("src"));
 
-app.listen(8080, () => console.log("App available on http://localhost:8080"));
+app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
