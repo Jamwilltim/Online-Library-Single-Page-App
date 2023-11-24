@@ -4,4 +4,4 @@ const port = 8080;
 
 app.use(express.static("src"));
 
-app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
+app.listen(port, () => console.log(`Server running at http://127.0.0.1:${port}`));

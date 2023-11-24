@@ -538,28 +538,24 @@ video {
   position: absolute;
 }
 
-.mb-10 {
-  margin-bottom: 2.5rem;
-}
-
 .flex {
   display: flex;
 }
 
-.h-1\/6 {
-  height: 16.666667%;
+.grid {
+  display: grid;
 }
 
-.h-4\/5 {
-  height: 80%;
+.hidden {
+  display: none;
 }
 
-.h-\[10\%\] {
-  height: 10%;
+.h-8 {
+  height: 2rem;
 }
 
-.h-auto {
-  height: auto;
+.h-\[7\%\] {
+  height: 7%;
 }
 
 .h-full {
@@ -570,8 +566,8 @@ video {
   height: 100vh;
 }
 
-.w-4\/5 {
-  width: 80%;
+.w-14 {
+  width: 3.5rem;
 }
 
 .w-5\/6 {
@@ -582,12 +578,28 @@ video {
   width: calc(100% - 2 * 2.75rem);
 }
 
+.w-auto {
+  width: auto;
+}
+
 .w-full {
   width: 100%;
 }
 
 .w-screen {
   width: 100vw;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grid-rows-4 {
+  grid-template-rows: repeat(4, minmax(0, 1fr));
 }
 
 .flex-row {
@@ -610,16 +622,24 @@ video {
   justify-content: space-between;
 }
 
-.justify-around {
-  justify-content: space-around;
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.rounded-2xl {
+  border-radius: 1rem;
+}
+
+.rounded-full {
+  border-radius: 9999px;
 }
 
 .border-b-2 {
   border-bottom-width: 2px;
 }
 
-.bg-transparent {
-  background-color: transparent;
+.bg-light-image {
+  background-image: url('img/gradient-background.jpg');
 }
 
 .bg-cover {
@@ -638,8 +658,17 @@ video {
   padding: 0.75rem;
 }
 
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
 .pb-5 {
   padding-bottom: 1.25rem;
+}
+
+.pr-1 {
+  padding-right: 0.25rem;
 }
 
 .pr-4 {
@@ -671,30 +700,27 @@ video {
 
 .glass-sidebar {
   background: rgba(255, 255, 255, 0.318);
-  border-radius: 16px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .glass-main {
   background: rgba(255, 255, 255, 0.514);
-  border-radius: 16px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 #active-button {
   background: rgba(255, 255, 255, 0.514);
 }
 
-.sidebar-button {
-  border-radius: 16px;
+.grey-border {
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.sidebar-button {
+  border-radius: 1em;
   width: 100%;
   height: 31%;
   text-align: left;
@@ -705,33 +731,63 @@ video {
   background: rgba(255, 255, 255, 0.318);
 }
 
+* {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
 @media (max-width: 1280px) {
   .sidebar-button {
     height: 100%;
     width: 31%;
   }
+
+  .profile-wrapper {
+    border: none;
+    box-shadow: none;
+  }
 }
 
-.focus\:border-none:focus {
-  border-style: none;
+@media (max-width: 1600px) {
+  .sidebar-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .label {
+    display: none;
+  }
 }
 
-.focus\:outline-none:focus {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
+.hover\:h-\[90\%\]:hover {
+  height: 90%;
+}
+
+@media (min-width: 768px) {
+  .md\:h-5\/6 {
+    height: 83.333333%;
+  }
 }
 
 @media (min-width: 1280px) {
-  .xl\:mb-0 {
-    margin-bottom: 0px;
-  }
-
   .xl\:mr-10 {
     margin-right: 2.5rem;
   }
 
+  .xl\:flex {
+    display: flex;
+  }
+
   .xl\:h-1\/3 {
     height: 33.333333%;
+  }
+
+  .xl\:h-20 {
+    height: 5rem;
   }
 
   .xl\:h-4\/5 {
@@ -762,7 +818,40 @@ video {
     flex-direction: column;
   }
 
-  .xl\:p-10 {
-    padding: 2.5rem;
+  .xl\:rounded-2xl {
+    border-radius: 1rem;
+  }
+
+  .xl\:border-b-2 {
+    border-bottom-width: 2px;
+  }
+
+  .xl\:border-t-2 {
+    border-top-width: 2px;
+  }
+
+  .xl\:px-10 {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+
+  .xl\:pb-5 {
+    padding-bottom: 1.25rem;
+  }
+
+  .xl\:pb-8 {
+    padding-bottom: 2rem;
+  }
+
+  .xl\:pt-10 {
+    padding-top: 2.5rem;
+  }
+
+  .xl\:pt-3 {
+    padding-top: 0.75rem;
+  }
+
+  .xl\:hover\:bg-white\/50:hover {
+    background-color: rgb(255 255 255 / 0.5);
   }
 }
