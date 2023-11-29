@@ -3,7 +3,7 @@ const pages = document.querySelectorAll(".main-page");
 
 const digits = document.getElementsByClassName("digit");
 
-let houses = 4560000;
+let books = 4560000;
 
 menuButtons.forEach(function (e) {
 	e.addEventListener("click", function () {
@@ -17,7 +17,7 @@ menuButtons.forEach(function (e) {
 const refresh = document.getElementById("refresh-button");
 
 refresh.addEventListener("click", function () {
-	refreshHouses(houses);
+	refreshBooks(books);
 });
 
 function changePages() {
@@ -34,7 +34,7 @@ function changePages() {
 	}
 }
 
-function displayHouses(num) {
+function displayBooks(num) {
 	const numArray = Array.from(String(num), Number);
 	for (let i = 0; i < digits.length; i++) {
 		let digit = digits[i];
@@ -43,7 +43,7 @@ function displayHouses(num) {
 	}
 }
 
-const refreshHouses = async (num) => {
+const refreshBooks = async (num) => {
 	const numArray = Array.from(String(num), Number);
 	for (let i = 0; i < digits.length; i++) {
 		let digit = digits[i];
@@ -57,4 +57,4 @@ const refreshHouses = async (num) => {
 	}
 };
 
-displayHouses(houses);
+displayBooks(books);

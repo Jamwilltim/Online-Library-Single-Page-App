@@ -867,7 +867,7 @@ video {
   border-radius: 100px;
 }
 
-.houses-number {
+.books-number {
   height: 59px;
   color: white;
   background-color: rgb(88, 88, 88);
@@ -887,16 +887,16 @@ video {
 
 @keyframes refresh {
   80% {
-    transform: rotate(360deg);
+    transform: rotate(-400deg);
   }
 
-  to {
-    transform: rotate(0);
+  100% {
+    transform: rotate(-360deg);
   }
 }
 
 .refresh:hover {
-  animation: refresh 0.8s ease-out 1;
+  animation: refresh 0.8s ease-out 1 forwards;
 }
 
 @media (min-width: 640px) {

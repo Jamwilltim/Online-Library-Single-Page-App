@@ -24,10 +24,10 @@
 					<i class="fa-solid fa-house pr-4"></i><span class="label">Home</span>
 				</button>
 				<button class="sidebar-button grey-border">
-					<i class="fa-solid fa-magnifying-glass pr-4"></i><span class="label">Browse Houses</span>
+					<i class="fa-solid fa-magnifying-glass pr-4"></i><span class="label">Browse Our Library</span>
 				</button>
 				<button class="sidebar-button grey-border">
-					<i class="fa-solid fa-calendar-days pr-4"></i><span class="label">Book a viewing</span>
+					<i class="fa-solid fa-calendar-days pr-4"></i><span class="label">Book loaning</span>
 				</button>
 			</div>
 			<div class="xl:w-full"></div>
@@ -59,27 +59,27 @@
 					<div class="md:grid md:grid-rows-3 md:gap-3 flex flex-col">
 						<div class="bg-white opacity-75 rounded-3xl md:row-span-2 h-35v md:h-auto mb-3 md:mb-0 p-6 overflow-hidden">
 							<div class="h-1/6">
-								<h1 class="text-3xl font-bold pb-2">New Listings</h1>
+								<h1 class="text-3xl font-bold pb-2">New Releases</h1>
 								<hr />
 							</div>
 						</div>
 						<div class="bg-white opacity-75 rounded-3xl h-35v md:h-auto p-6 overflow-hidden flex flex-col items-center">
 							<div class="h-1/6 w-full flex flex-row justify-between">
-								<h1 class="text-3xl font-bold pb-2">Houses Sold</h1>
+								<h1 class="text-3xl font-bold pb-2">Books Sold</h1>
 								<div class="h-full flex items-center cursor-pointer refresh" id="refresh-button">
 									<i class="fa-solid fa-arrow-rotate-right fa-flip-horizontal"></i>
 								</div>
 							</div>
 							<hr />
-							<div id="houses-sold" class="w-2/3 h-2/3 flex flex-row items-center justify-around pt-6">
-								<div class="houses-number">
+							<div class="w-2/3 h-2/3 flex flex-row items-center justify-around pt-6">
+								<div class="books-number">
 									<div class="flex flex-col digit">
 										<span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
 										><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span
 										><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
 									</div>
 								</div>
-								<div class="houses-number">
+								<div class="books-number">
 									<div class="flex flex-col digit">
 										<span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
 										><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span
@@ -88,7 +88,7 @@
 										><span>8</span><span>9</span>
 									</div>
 								</div>
-								<div class="houses-number">
+								<div class="books-number">
 									<div class="flex flex-col digit transition-all">
 										<span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
 										><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span
@@ -98,7 +98,7 @@
 										><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
 									</div>
 								</div>
-								<div class="houses-number">
+								<div class="books-number">
 									<div class="flex flex-col digit">
 										<span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
 										><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span
@@ -110,7 +110,7 @@
 										><span>9</span>
 									</div>
 								</div>
-								<div class="houses-number">
+								<div class="books-number">
 									<div class="flex flex-col digit">
 										<span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
 										><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span
@@ -123,7 +123,7 @@
 										><span>6</span><span>7</span><span>8</span><span>9</span>
 									</div>
 								</div>
-								<div class="houses-number">
+								<div class="books-number">
 									<div class="flex flex-col digit">
 										<span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
 										><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span
@@ -135,22 +135,6 @@
 										><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span
 										><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span
 										><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
-									</div>
-								</div>
-								<div class="houses-number">
-									<div class="flex flex-col digit">
-										<span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
-										><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span
-										><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span
-										><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span
-										><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span
-										><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span
-										><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span
-										><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span
-										><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span
-										><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span
-										><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
-										><span>7</span><span>8</span><span>9</span>
 									</div>
 								</div>
 							</div>
