@@ -7,6 +7,9 @@ module.exports = {
 			backgroundImage: {
 				"light-image": "url('img/gradient-background.jpg')",
 			},
+			height: {
+				"35v": "35vh",
+			},
 		},
 	},
 	plugins: [],

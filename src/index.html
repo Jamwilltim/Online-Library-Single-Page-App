@@ -38,7 +38,7 @@
 							<img
 								src="img/profile.webp"
 								alt="Profile picture"
-								class="cursor-pointer transition-all hover:h-[90%] rounded-full w-auto md:h-5/6 h-8"
+								class="cursor-pointer transition-all xl:hover:h-[90%] rounded-full w-auto xl:h-5/6 h-8"
 								id="profile-picture"
 							/>
 						</div>
@@ -48,12 +48,134 @@
 				</div>
 			</div>
 		</div>
-		<div class="glass-main xl:rounded-2xl xl:w-2/3 xl:h-4/5 w-full h-full p-11 grey-border">
-			<div class="main-page opacity-100 absolute w-[calc(100%-2*2.75rem)] transition-all duration-500">
-				<div class="flex justify-between w-full pb-5 border-b-2">
+		<div class="glass-main xl:rounded-2xl xl:w-2/3 xl:h-4/5 w-full h-[93%] sm:p-11 px-2 grey-border py-11">
+			<div
+				class="main-page h-[calc(100%-88px)] opacity-100 absolute sm:w-[calc(100%-2*2.75rem)] w-[calc(100%-2*0.5rem)] transition-all duration-500"
+			>
+				<div class="flex justify-between w-full border-b-2 h-14 mb-6">
 					<strong><h1 class="text-4xl">Home</h1></strong>
 				</div>
-				<div class="grid grid-cols-3 grid-rows-4 w-full"></div>
+				<div class="scrollbar h-[calc(100%-80px)] grid md:grid-cols-3 gap-3 w-full overflow-y-scroll">
+					<div class="md:grid md:grid-rows-3 md:gap-3 flex flex-col">
+						<div class="bg-white opacity-75 rounded-3xl md:row-span-2 h-35v md:h-auto mb-3 md:mb-0 p-6 overflow-hidden">
+							<div class="h-1/6">
+								<h1 class="text-3xl font-bold pb-2">New Listings</h1>
+								<hr />
+							</div>
+						</div>
+						<div class="bg-white opacity-75 rounded-3xl h-35v md:h-auto p-6 overflow-hidden flex flex-col items-center">
+							<div class="h-1/6 w-full flex flex-row justify-between">
+								<h1 class="text-3xl font-bold pb-2">Houses Sold</h1>
+								<div class="h-full flex items-center cursor-pointer refresh" id="refresh-button">
+									<i class="fa-solid fa-arrow-rotate-right fa-flip-horizontal"></i>
+								</div>
+							</div>
+							<hr />
+							<div id="houses-sold" class="w-2/3 h-2/3 flex flex-row items-center justify-around pt-6">
+								<div class="houses-number">
+									<div class="flex flex-col digit">
+										<span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
+										><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span
+										><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
+									</div>
+								</div>
+								<div class="houses-number">
+									<div class="flex flex-col digit">
+										<span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
+										><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span
+										><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span
+										><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span
+										><span>8</span><span>9</span>
+									</div>
+								</div>
+								<div class="houses-number">
+									<div class="flex flex-col digit transition-all">
+										<span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
+										><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span
+										><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span
+										><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span
+										><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span
+										><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
+									</div>
+								</div>
+								<div class="houses-number">
+									<div class="flex flex-col digit">
+										<span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
+										><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span
+										><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span
+										><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span
+										><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span
+										><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span
+										><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span
+										><span>9</span>
+									</div>
+								</div>
+								<div class="houses-number">
+									<div class="flex flex-col digit">
+										<span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
+										><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span
+										><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span
+										><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span
+										><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span
+										><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span
+										><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span
+										><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span
+										><span>6</span><span>7</span><span>8</span><span>9</span>
+									</div>
+								</div>
+								<div class="houses-number">
+									<div class="flex flex-col digit">
+										<span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
+										><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span
+										><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span
+										><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span
+										><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span
+										><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span
+										><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span
+										><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span
+										><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span
+										><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
+									</div>
+								</div>
+								<div class="houses-number">
+									<div class="flex flex-col digit">
+										<span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
+										><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span
+										><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span
+										><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span
+										><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span
+										><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span
+										><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span
+										><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span
+										><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span
+										><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span
+										><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
+										><span>7</span><span>8</span><span>9</span>
+									</div>
+								</div>
+							</div>
+							<div class="h-1/6">in the last year</div>
+						</div>
+					</div>
+					<div class="md:grid md:grid-rows-4 md:gap-3 flex flex-col">
+						<div class="bg-white opacity-75 rounded-3xl h-35v md:h-auto mb-3 md:mb-0 p-6 overflow-hidden"></div>
+						<div class="bg-white opacity-75 rounded-3xl md:row-span-3 h-35v md:h-auto p-6 overflow-hidden">
+							<div class="h-1/6">
+								<h1 class="text-3xl font-bold pb-2">About Us</h1>
+								<hr />
+							</div>
+						</div>
+					</div>
+					<div class="md:grid md:grid-rows-2 md:gap-3 flex flex-col">
+						<div class="bg-white opacity-75 rounded-3xl h-35v md:h-auto mb-3 md:mb-0 p-6 overflow-hidden"></div>
+						<div class="bg-white opacity-75 rounded-3xl h-35v md:h-auto p-6 overflow-hidden">
+							<div class="h-1/6">
+								<h1 class="text-3xl font-bold pb-2">Favourites</h1>
+								<hr />
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="main-page opacity-0 absolute w-[calc(100%-2*2.75rem)] transition-all duration-500">
 				<div class="flex justify-between w-full pb-5 border-b-2">

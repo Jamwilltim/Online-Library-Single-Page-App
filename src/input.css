@@ -66,3 +66,49 @@
 		display: none;
 	}
 }
+
+/* Custom scrollbar taken and editted from https://ishadeed.com/article/custom-scrollbars-css/ */
+.scrollbar::-webkit-scrollbar {
+	width: 6px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+	background-color: transparent;
+	border-radius: 100px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+	background-color: #47474763;
+	border-radius: 100px;
+}
+
+.houses-number {
+	height: 59px;
+	color: white;
+	background-color: rgb(88, 88, 88);
+	padding: 7px;
+	font-size: 30px;
+	border-radius: 5px;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+.digit {
+	transition-property: all;
+	transition-timing-function: cubic-bezier(0, 0.95, 0.66, 0.98);
+	transition-duration: 2s;
+}
+
+@keyframes refresh {
+	80% {
+		transform: rotate(360deg);
+	}
+	to {
+		transform: rotate(0);
+	}
+}
+
+.refresh:hover {
+	animation: refresh 0.8s ease-out 1;
+}
