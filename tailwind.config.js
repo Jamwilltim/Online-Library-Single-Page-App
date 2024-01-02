@@ -7,8 +7,9 @@ module.exports = {
 			backgroundImage: {
 				"light-image": "url('img/gradient-background.jpg')",
 			},
-			height: {
-				"35v": "35vh",
+			screens: {
+				"1080p": { raw: "(resolution: 192dpi)" },
+				"1440p": { raw: "(resolution: 288dpi)" },
 			},
 		},
 	},

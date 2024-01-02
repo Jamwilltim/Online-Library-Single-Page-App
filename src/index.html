@@ -20,58 +20,71 @@
 			class="grey-border xl:rounded-2xl glass-sidebar xl:max-w-[400px] xl:w-1/6 xl:h-4/5 w-full h-[7%] xl:mr-10 flex xl:flex-col flex-row justify-between items-center xl:px-10 xl:pb-5 xl:pt-10 p-3"
 		>
 			<div class="buttons xl:h-1/3 xl:pb-8 h-full xl:w-full w-5/6 flex xl:flex-col flex-row justify-between xl:border-b-2">
-				<button class="sidebar-button grey-border" id="active-button">
-					<i class="fa-solid fa-house pr-4"></i><span class="label">Home</span>
+				<button class="sidebar-button sidebar-buttons grey-border" id="home-button">
+					<a href="/#home" class="w-full h-full flex items-center justify-start flex-row"
+						><i class="fa-solid fa-house pr-4"></i><span class="label">Home</span></a
+					>
 				</button>
-				<button class="sidebar-button grey-border">
-					<i class="fa-solid fa-magnifying-glass pr-4"></i><span class="label">Browse Our Library</span>
+				<button class="sidebar-button sidebar-buttons grey-border" id="library-button">
+					<a href="/#library" class="w-full h-full flex items-center justify-start flex-row">
+						<i class="fa-solid fa-magnifying-glass pr-4"></i>
+						<span class="label">Browse Our Library</span></a
+					>
 				</button>
-				<button class="sidebar-button grey-border">
-					<i class="fa-solid fa-calendar-days pr-4"></i><span class="label">Book loaning</span>
+				<button class="sidebar-button sidebar-buttons grey-border" id="loans-button">
+					<a href="/#loans" class="w-full h-full flex items-center justify-start flex-row">
+						<i class="fa-solid fa-calendar-days pr-4"></i>
+						<span class="label">Book loaning</span></a
+					>
 				</button>
 			</div>
 			<div class="xl:w-full"></div>
 			<div class="xl:h-20 xl:w-full xl:border-t-2 xl:pt-3">
-				<div class="profile-wrapper w-full h-full py-2 cursor-pointer xl:hover:bg-white/50 grey-border rounded-2xl flex justify-center">
-					<div class="w-full h-full flex flex-row justify-center items-center">
-						<div class="w-14 h-full flex items-center justify-center">
-							<img
-								src="img/profile.webp"
-								alt="Profile picture"
-								class="cursor-pointer transition-all xl:hover:h-[90%] rounded-full w-auto xl:h-5/6 h-8"
-								id="profile-picture"
-							/>
-						</div>
-						<label for="profile-picture" class="label pr-1 cursor-pointer">James Harvey</label>
-						<i class="fa-solid fa-keyq hidden"></i>
-					</div>
+				<div
+					class="sidebar-buttons profile-wrapper h-full py-2 cursor-pointer xl:hover:bg-white/50 grey-border rounded-2xl flex justify-center"
+					id="administrator-button"
+				>
+					<a href="/#administrator" class="block w-full">
+						<div class="w-full h-full flex flex-row justify-center items-center">
+							<div class="w-14 h-full flex items-center justify-center">
+								<img
+									src="img/profile.webp"
+									alt="Profile picture"
+									class="cursor-pointer transition-all xl:hover:h-[90%] rounded-full w-auto xl:h-5/6 h-8"
+									id="profile-picture"
+								/>
+							</div>
+							<label for="profile-picture" class="label pr-1 cursor-pointer">James Harvey</label>
+							<i class="fa-solid fa-keyq hidden"></i></div
+					></a>
 				</div>
 			</div>
 		</div>
 		<div class="glass-main xl:rounded-2xl xl:w-2/3 xl:h-4/5 w-full h-[93%] sm:p-11 px-2 grey-border py-11">
 			<div
-				class="main-page h-[calc(100%-88px)] opacity-100 absolute sm:w-[calc(100%-2*2.75rem)] w-[calc(100%-2*0.5rem)] transition-all duration-500"
+				class="main-page h-[calc(100%-88px)] z-10 opacity-100 absolute sm:w-[calc(100%-2*2.75rem)] w-[calc(100%-2*0.5rem)] transition-all duration-500"
 			>
 				<div class="flex justify-between w-full border-b-2 h-14 mb-6">
 					<strong><h1 class="text-4xl">Home</h1></strong>
 				</div>
-				<div class="scrollbar h-[calc(100%-80px)] grid md:grid-cols-3 gap-3 w-full overflow-y-scroll">
-					<div class="md:grid md:grid-rows-3 md:gap-3 flex flex-col">
-						<div class="bg-white opacity-75 rounded-3xl md:row-span-2 h-35v md:h-auto mb-3 md:mb-0 p-6 overflow-hidden">
+				<div class="scrollbar h-[calc(100%-80px)] grid md:grid-cols-2 gap-2 w-full overflow-y-scroll">
+					<div class="md:grid md:grid-rows-3 md:gap-2 flex flex-col">
+						<div class="bg-white opacity-75 rounded-3xl md:row-span-2 md:h-auto mb-3 md:mb-0 p-5 overflow-hidden">
 							<div class="h-1/6">
 								<h1 class="text-3xl font-bold pb-2">New Releases</h1>
 								<hr />
 							</div>
+							<div id="new-releases-container" class="flex justify-center flex-col items-center h-5/6"></div>
 						</div>
-						<div class="bg-white opacity-75 rounded-3xl h-35v md:h-auto p-6 overflow-hidden flex flex-col items-center">
-							<div class="h-1/6 w-full flex flex-row justify-between">
-								<h1 class="text-3xl font-bold pb-2">Books Sold</h1>
+						<div class="bg-white opacity-75 rounded-3xl md:h-auto p-5 overflow-hidden flex flex-col items-center">
+							<div class="h-auto w-full flex flex-row justify-between items-center">
+								<h1 class="text-3xl font-bold pb-2">Book Loans</h1>
 								<div class="h-full flex items-center cursor-pointer refresh" id="refresh-button">
 									<i class="fa-solid fa-arrow-rotate-right fa-flip-horizontal"></i>
 								</div>
 							</div>
-							<hr />
-							<div class="w-2/3 h-2/3 flex flex-row items-center justify-around pt-6">
+							<hr class="w-full" />
+							<div class="w-2/3 max-w-[240px] h-auto flex flex-row items-center justify-around pt-5">
 								<div class="books-number">
 									<div class="flex flex-col digit">
 										<span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
@@ -138,21 +151,17 @@
 									</div>
 								</div>
 							</div>
-							<div class="h-1/6">in the last year</div>
+							<div class="h-auto pt-3">in the last year</div>
 						</div>
 					</div>
-					<div class="md:grid md:grid-rows-4 md:gap-3 flex flex-col">
-						<div class="bg-white opacity-75 rounded-3xl h-35v md:h-auto mb-3 md:mb-0 p-6 overflow-hidden"></div>
-						<div class="bg-white opacity-75 rounded-3xl md:row-span-3 h-35v md:h-auto p-6 overflow-hidden">
+					<div class="md:grid md:grid-rows-4 md:gap-2 flex flex-col">
+						<div class="bg-white opacity-75 rounded-3xl md:row-span-2 md:h-auto p-5 overflow-hidden">
 							<div class="h-1/6">
 								<h1 class="text-3xl font-bold pb-2">About Us</h1>
 								<hr />
 							</div>
 						</div>
-					</div>
-					<div class="md:grid md:grid-rows-2 md:gap-3 flex flex-col">
-						<div class="bg-white opacity-75 rounded-3xl h-35v md:h-auto mb-3 md:mb-0 p-6 overflow-hidden"></div>
-						<div class="bg-white opacity-75 rounded-3xl h-35v md:h-auto p-6 overflow-hidden">
+						<div class="bg-white opacity-75 rounded-3xl md:h-auto p-5 overflow-hidden md:row-span-2">
 							<div class="h-1/6">
 								<h1 class="text-3xl font-bold pb-2">Favourites</h1>
 								<hr />
@@ -161,18 +170,93 @@
 					</div>
 				</div>
 			</div>
-			<div class="main-page opacity-0 absolute w-[calc(100%-2*2.75rem)] transition-all duration-500">
-				<div class="flex justify-between w-full pb-5 border-b-2">
-					<strong><h1 class="text-4xl">Browse Houses</h1></strong>
+			<div
+				class="main-page h-[calc(100%-88px)] opacity-0 absolute sm:w-[calc(100%-2*2.75rem)] w-[calc(100%-2*0.5rem)] transition-all duration-500"
+			>
+				<div class="flex justify-between w-full border-b-2 h-14 mb-6">
+					<strong><h1 class="text-4xl">Browse Library</h1></strong>
+				</div>
+				<div id="books-container" class="scrollbar h-[calc(100%-80px)] w-full overflow-y-scroll grid grid-cols-4"></div>
+				<div
+					id="load-more"
+					class="absolute transition-all duration-200 w-10 h-10 bg-white rounded-full top-full] left-1/2 translate-x-[-50%] translate-y-[-50%]"
+				>
+					<div class="w-full h-full flex justify-center items-center">
+						<div class="w-5 h-5 flex justify-center items-center">
+							<i class="fa-solid fa-arrow-down"></i>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="main-page opacity-0 absolute w-[calc(100%-2*2.75rem)] transition-all duration-500">
-				<div class="flex justify-between w-full pb-5 border-b-2">
+				<div class="flex justify-between w-full pb-5 border-b-2 h-auto">
 					<strong><h1 class="text-4xl">Book a viewing</h1></strong>
+				</div>
+			</div>
+			<div
+				class="main-page h-[calc(100%-88px)] z-10 opacity-100 absolute sm:w-[calc(100%-2*2.75rem)] w-[calc(100%-2*0.5rem)] transition-all duration-500"
+			>
+				<div class="flex justify-between w-full border-b-2 h-14 mb-6">
+					<strong><h1 class="text-4xl">Administrator</h1></strong>
+				</div>
+				<div class="h-[calc(100%-80px)] w-full overflow-y-hidden flex flex-col">
+					<p>If you want to add a new book to the library fill in the form below and press submit</p>
+					<form
+						method="post"
+						action="/api/books"
+						id="add-book-form"
+						class="mt-5 p-4 bg-white rounded-3xl md:grid md:grid-cols-2 md:grid-rows-1 md:gap-3 flex flex-col justify-between bg-opacity-40 flex-grow"
+					>
+						<div class="h-full justify-between flex flex-col">
+							<div class="flex flex-col">
+								<label for="title" class="pb-2">Title</label>
+								<input type="text" name="title" id="book-title" class="grey-border rounded-2xl p-2 focus:outline-none" />
+							</div>
+							<div class="flex flex-col pt-5">
+								<label for="authors" class="pb-2">Author</label>
+								<input type="text" name="authors" id="book-author" class="grey-border rounded-2xl p-2 focus:outline-none" />
+							</div>
+							<div class="flex flex-col pt-5">
+								<label for="categories" class="pb-2">Genre</label>
+								<input type="text" name="categories" id="book-genre" class="grey-border rounded-2xl p-2 focus:outline-none" />
+							</div>
+							<div class="flex flex-col pt-5">
+								<label for="book-quantity" class="pb-2">Quantity</label>
+								<input type="number" name="book-quantity" id="book-quantity" class="grey-border rounded-2xl p-2 focus:outline-none" />
+							</div>
+						</div>
+						<div class="h-full justify-between flex flex-col">
+							<div class="flex flex-col">
+								<label for="thumbnailUrl" class="pb-2">Cover</label>
+								<input
+									type="file"
+									name="thumbnailUrl"
+									id="book-cover"
+									class="grey-border rounded-2xl p-2 bg-white focus:outline-none"
+								/>
+							</div>
+							<div class="flex flex-col pt-5 h-full flex-grow">
+								<label for="longDescription" class="pb-2">Description</label>
+								<textarea
+									id="book-description"
+									name="longDescription"
+									class="grey-border rounded-2xl p-2 resize-none h-full focus:outline-none"
+								></textarea>
+							</div>
+						</div>
+						<div class="h-16 col-span-2 grid place-items-center">
+							<button
+								type="submit"
+								class="bg-white text-black py-2 px-4 rounded-full grey-border border-gray-300 hover:bg-gray-100 transition-all"
+							>
+								Submit
+							</button>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
 
-		<script src="index.js"></script>
+		<script src="/index.js"></script>
 	</body>
 </html>
