@@ -147,19 +147,124 @@ const renderBooks = async () => {
 	try {
 		const booksArray = await loadBooks();
 		booksArray.forEach((book) => {
+			// Create the image element
 			const image = document.createElement("img");
 			image.src = book.thumbnailUrl;
 			image.alt = "Book Thumbnail";
 			image.classList.add("h-[188px]");
+
+			// Store the image in a container to aid in positioning
 			const imageContainer = document.createElement("div");
 			imageContainer.classList.add("pb-2");
 			imageContainer.appendChild(image);
+
+			// Create title text (bold)
 			const title = document.createElement("h3");
 			title.classList.add("font-bold", "text-center", "w-full");
 			title.innerText = book.title;
+
+			// Create author text
 			const author = document.createElement("p");
 			author.classList.add("w-2/3", "text-center", "w-full");
 			author.innerText = book.authors;
+
+			// Create a div for the front of the card
+			const bookFront = document.createElement("div");
+			bookFront.classList.add("flex", "flex-col", "justify-around", "items-center", "h-full");
+			bookFront.appendChild(imageContainer); // Append all of the elements on the front
+			bookFront.appendChild(title);
+			bookFront.appendChild(author);
+
+			// Add an event listener to flip the card when clicked
+			bookFront.addEventListener("click", () => {
+				bookFront.classList.toggle("hidden"); // Toggle the visibility of the front of the card
+				bookBack.classList.toggle("hidden"); // Toggle the visibility of the back of the card
+			});
+
+			// Create a div for the buttons on the back of the card
+			const buttons = document.createElement("div");
+			buttons.classList.add("flex", "justify-between", "w-full", "mb-4");
+
+			// Create a heart button to toggle whether the book is favourited
+			const favouriteButton = document.createElement("button");
+			const favouriteIcon = document.createElement("i");
+
+			// Check if the book is favourited
+			if (book.favourited) {
+				favouriteIcon.classList.add("fa-solid", "fa-heart", "text-red-500");
+			} else {
+				favouriteIcon.classList.add("fa-regular", "fa-heart");
+			}
+
+			// Add an event listener to toggle the heart icon and send a POST request to the server-side script
+			favouriteButton.addEventListener("click", async function () {
+				// Toggle the 'favourited' property of the book
+				book.favourited = !book.favourited;
+
+				// Update the heart icon
+				if (book.favourited) {
+					favouriteIcon.classList.remove("fa-regular");
+					favouriteIcon.classList.add("fa-solid", "text-red-500");
+				} else {
+					favouriteIcon.classList.remove("fa-solid", "text-red-500");
+					favouriteIcon.classList.add("fa-regular");
+				}
+
+				// Send a POST request to the server-side script
+				try {
+					const response = await fetch("/api/updateBook", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(book),
+					});
+
+					const data = await response.json();
+					console.log("Success:", data);
+				} catch (error) {
+					console.error("Error:", error);
+				}
+			});
+
+			// Append the heart icon to the button
+			favouriteButton.appendChild(favouriteIcon);
+			favouriteButton.classList.add("rounded-full", "p-2", "w-10", "h-10", "hover:bg-gray-200");
+
+			// Create a button that flips the card
+			const flipButton = document.createElement("button");
+			const flipIcon = document.createElement("i");
+			flipIcon.classList.add("fa-solid", "fa-shuffle", "text-black");
+			flipButton.classList.add("rounded-full", "p-2", "w-10", "h-10", "hover:bg-gray-200");
+
+			flipButton.appendChild(flipIcon); // Append the icon to the button
+
+			// Add an event listener to flip the card when clicked
+			flipButton.addEventListener("click", () => {
+				bookFront.classList.toggle("hidden"); // Toggle the visibility of the front of the card
+				bookBack.classList.toggle("hidden"); // Toggle the visibility of the back of the card
+			});
+
+			buttons.appendChild(favouriteButton); // Append the buttons to the button container
+			buttons.appendChild(flipButton); // Append the buttons to the button container
+
+			// Create a description of the book
+			const description = document.createElement("p");
+			const descriptionContainer = document.createElement("div"); // Create a div to contain the description
+
+			descriptionContainer.classList.add("overflow-y-scroll", "h-4/5", "scrollbar");
+			description.classList.add("text-center", "w-full", "text-black");
+			description.innerText = book.shortDescription;
+
+			descriptionContainer.appendChild(description); // Append the description to the container
+
+			// Create a div for the back of the card
+			const bookBack = document.createElement("div");
+			bookBack.classList.add("h-full", "hidden");
+			bookBack.appendChild(buttons); // Append the buttons
+			bookBack.appendChild(descriptionContainer); // Append the description
+
+			// Create a div for the whole card
 			const bookContainer = document.createElement("div");
 			bookContainer.classList.add(
 				"flex",
@@ -172,15 +277,16 @@ const renderBooks = async () => {
 				"p-4",
 				"m-4",
 				"w-60",
-				"h-80"
+				"h-80",
+				"cursor-pointer"
 			);
 			bookContainer.id = "books-container";
-			bookContainer.appendChild(imageContainer);
-			bookContainer.appendChild(title);
-			bookContainer.appendChild(author);
-			books.appendChild(bookContainer);
+
+			bookContainer.appendChild(bookFront); // Append the front of the card
+			bookContainer.appendChild(bookBack); // Append the back of the card
+			books.appendChild(bookContainer); // Append the whole card
 		});
-		sendVariables(start, end);
+		sendVariables(start, end); // Send the updated start and end variables to the server
 	} catch (error) {
 		console.error("Error rendering the books:", error);
 	}
@@ -308,7 +414,8 @@ const addBooktoLibrary = (book) => {
 		"p-4",
 		"m-4",
 		"w-60",
-		"h-80"
+		"h-80",
+		"cursor-pointer"
 	);
 	bookContainer.appendChild(imageContainer);
 	bookContainer.appendChild(title);

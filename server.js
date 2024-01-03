@@ -83,6 +83,29 @@ app.post("/api/books", async (req, res) => {
 	}
 });
 
+// POST method to update a book's 'favourited' property
+app.post("/api/updateBook", async (req, res) => {
+	try {
+		const updatedBook = req.body;
+		const data = await fs.readFile("./src/books.json", "utf8");
+		const books = JSON.parse(data);
+
+		// Find the book that needs to be updated
+		const bookIndex = books.findIndex((book) => book._id === updatedBook._id);
+
+		// Update the 'favourited' property of the book
+		if (bookIndex !== -1) {
+			books[bookIndex].favourited = updatedBook.favourited;
+		}
+
+		// Write the updated book data back to the file
+		await fs.writeFile("./src/books.json", JSON.stringify(books, null, 2));
+		res.status(200).send("Book updated successfully");
+	} catch (error) {
+		res.status(500).send("An error occurred");
+	}
+});
+
 // Wildcard route to make sure that any request that doesn't match the ones above gets sent to index.html
 app.get("*", (req, res) => {
 	res.sendFile(path.join(__dirname, "/src/index.html"));
