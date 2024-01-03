@@ -71,7 +71,11 @@ app.post("/api/books", async (req, res) => {
 		const data = await fs.readFile("./src/books.json", "utf8");
 		const books = JSON.parse(data);
 
-		newBook._id = books[books.length]._id + 1;
+		// Set the id of the new book to be one more than the id of the last book in the array
+		newBook._id = books[books.length - 1]._id + 1;
+
+		// Set the authors to be listed in an array
+		newBook.authors = newBook.authors.split(",");
 
 		console.log(newBook);
 		books.push(newBook);
@@ -84,7 +88,7 @@ app.post("/api/books", async (req, res) => {
 });
 
 // POST method to update a book's 'favourited' property
-app.post("/api/updateBook", async (req, res) => {
+app.post("/api/updateFavourite", async (req, res) => {
 	try {
 		const updatedBook = req.body;
 		const data = await fs.readFile("./src/books.json", "utf8");
