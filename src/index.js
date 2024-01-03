@@ -126,11 +126,15 @@ const refreshnumberBooksLoaned = (num) => {
 
 displaynumberBooksLoaned(numberBooksLoaned);
 
-// Display books in library
+// Load books to library
 const loadBooks = async () => {
 	try {
 		const response = await fetch("/api/books");
 		const books = await response.json();
+
+		// Sort the books by _id
+		books.sort((a, b) => a._id - b._id);
+
 		return books;
 	} catch (error) {
 		console.error("Error fetching books data:", error);
@@ -138,18 +142,24 @@ const loadBooks = async () => {
 	}
 };
 
+let start, end;
+
+// Display books in library
 const renderBooks = async () => {
 	const books = document.getElementById("books-container");
+
 	const variablesResponse = await fetch("/api/variables");
 	const variables = await variablesResponse.json();
-	let start = variables.start;
-	let end = variables.end;
+
+	start = variables.start;
+	end = variables.end;
+
 	try {
 		const booksArray = await loadBooks();
 		booksArray.forEach((book) => {
 			createBookElement(book, books);
 		});
-		sendVariables(start, end); // Send the updated start and end variables to the server
+		sendVariables(); // Send the updated start and end variables to the server
 	} catch (error) {
 		console.error("Error rendering the books:", error);
 	}
@@ -240,6 +250,45 @@ const createBookElement = (book, books) => {
 	favouriteButton.appendChild(favouriteIcon);
 	favouriteButton.classList.add("rounded-full", "p-2", "w-10", "h-10", "hover:bg-gray-200");
 
+	// Create a button that deletes the book
+	const deleteButton = document.createElement("button");
+	const deleteIcon = document.createElement("i");
+	deleteIcon.classList.add("fa-solid", "fa-trash", "text-black");
+	deleteButton.classList.add("rounded-full", "p-2", "w-10", "h-10", "hover:bg-gray-200");
+
+	deleteButton.appendChild(deleteIcon); // Append the icon to the button
+
+	// Add an event listener to delete the book when clicked
+	deleteButton.addEventListener("click", async () => {
+		// Ask if the user is sure they want to delete the book
+		const confirmDelete = window.confirm("Are you sure you want to delete this book?");
+
+		// If the user clicked OK, delete the book
+		if (confirmDelete) {
+			try {
+				const response = await fetch("/api/books", {
+					method: "DELETE",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(book),
+				});
+
+				renderBooks();
+
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				} else {
+					books.removeChild(bookContainer); // Remove the book from the library
+					const data = await response.text();
+					console.log("Success:", data);
+				}
+			} catch (error) {
+				console.error("Error:", error);
+			}
+		}
+	});
+
 	// Create a button that flips the card
 	const flipButton = document.createElement("button");
 	const flipIcon = document.createElement("i");
@@ -254,8 +303,10 @@ const createBookElement = (book, books) => {
 		bookBack.classList.toggle("hidden"); // Toggle the visibility of the back of the card
 	});
 
-	buttons.appendChild(favouriteButton); // Append the buttons to the button container
-	buttons.appendChild(flipButton); // Append the buttons to the button container
+	// Append the buttons to the button container
+	buttons.appendChild(favouriteButton);
+	buttons.appendChild(deleteButton);
+	buttons.appendChild(flipButton);
 
 	// Create a description of the book
 	const description = document.createElement("p");
@@ -269,7 +320,7 @@ const createBookElement = (book, books) => {
 
 	// Create a div for the back of the card
 	const bookBack = document.createElement("div");
-	bookBack.classList.add("h-full", "hidden", "cursor-default");
+	bookBack.classList.add("h-full", "hidden", "cursor-default", "w-full");
 	bookBack.appendChild(buttons); // Append the buttons
 	bookBack.appendChild(descriptionContainer); // Append the description
 
@@ -336,7 +387,7 @@ loadMore.addEventListener("click", () => {
 });
 
 // Update the start and end variables so that when load more is clicked again it loads the next 40 books
-const sendVariables = async (start, end) => {
+const sendVariables = async () => {
 	try {
 		start += 40;
 		end += 40;
@@ -366,7 +417,6 @@ window.addEventListener("beforeunload", () => {
 		},
 		body: JSON.stringify({ start: 0, end: 40 }),
 	});
-	console.log("Page unloaded");
 });
 
 // Book form
@@ -384,9 +434,8 @@ form.onsubmit = async (e) => {
 			},
 			body: JSON.stringify(book),
 		});
-		renderBooks();
+
 		addBooktoLibrary(book);
-		renderBooks();
 
 		if (!response.ok) {
 			throw new Error(`HTTP error! status: ${response.status}`);

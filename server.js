@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-const books = require("./src/books.json");
+let books = require("./src/books.json");
 const fs = require("fs").promises;
 
 const app = express();
@@ -69,18 +69,19 @@ app.post("/api/books", async (req, res) => {
 	try {
 		const newBook = req.body;
 		const data = await fs.readFile("./src/books.json", "utf8");
-		const books = JSON.parse(data);
+		const temp_books = JSON.parse(data);
 
 		// Set the id of the new book to be one more than the id of the last book in the array
-		newBook._id = books[books.length - 1]._id + 1;
+		newBook._id = books[temp_books.length - 1]._id + 1;
 
 		// Set the authors to be listed in an array
 		newBook.authors = newBook.authors.split(",");
 
 		console.log(newBook);
-		books.push(newBook);
+		temp_books.push(newBook);
 
 		await fs.writeFile("./src/books.json", JSON.stringify(books, null, 2));
+		books = temp_books;
 		res.status(200).send("Book added successfully");
 	} catch (error) {
 		res.status(500).send("An error occurred");
@@ -92,19 +93,44 @@ app.post("/api/updateFavourite", async (req, res) => {
 	try {
 		const updatedBook = req.body;
 		const data = await fs.readFile("./src/books.json", "utf8");
-		const books = JSON.parse(data);
+		const temp_books = JSON.parse(data);
 
 		// Find the book that needs to be updated
-		const bookIndex = books.findIndex((book) => book._id === updatedBook._id);
+		const bookIndex = temp_books.findIndex((book) => book._id === updatedBook._id);
 
 		// Update the 'favourited' property of the book
 		if (bookIndex !== -1) {
-			books[bookIndex].favourited = updatedBook.favourited;
+			temp_books[bookIndex].favourited = updatedBook.favourited;
 		}
 
 		// Write the updated book data back to the file
-		await fs.writeFile("./src/books.json", JSON.stringify(books, null, 2));
+		await fs.writeFile("./src/books.json", JSON.stringify(temp_books, null, 2));
+		books = temp_books;
 		res.status(200).send("Book updated successfully");
+	} catch (error) {
+		res.status(500).send("An error occurred");
+	}
+});
+
+// POST method to delete a book
+app.delete("/api/books", async (req, res) => {
+	try {
+		const bookToDelete = req.body;
+		const data = await fs.readFile("./src/books.json", "utf8");
+		const temp_books = JSON.parse(data);
+
+		// Find the book that needs to be deleted
+		const bookIndex = temp_books.findIndex((book) => book._id === bookToDelete._id);
+
+		// Delete the book
+		if (bookIndex !== -1) {
+			temp_books.splice(bookIndex, 1);
+		}
+
+		// Write the updated book data back to the file
+		await fs.writeFile("./src/books.json", JSON.stringify(temp_books, null, 2));
+		books = temp_books;
+		res.status(200).send("Book deleted successfully");
 	} catch (error) {
 		res.status(500).send("An error occurred");
 	}
