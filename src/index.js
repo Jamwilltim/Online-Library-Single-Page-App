@@ -93,15 +93,27 @@ renderNewReleases();
 // Digit spinner for the number of books sold in the last year
 const refresh = document.getElementById("refresh-button");
 
-let numberBooksLoaned = 4560000;
+const getNumberOfBooks = async () => {
+	try {
+		const response = await fetch("/books.json");
+		const data = await response.json();
+		const numberOfBooks = data.length;
+		return numberOfBooks;
+	} catch (error) {
+		console.error("Error fetching number of books data:", error);
+		throw error;
+	}
+};
 
 const digits = document.getElementsByClassName("digit");
 
-refresh.addEventListener("click", () => {
-	refreshnumberBooksLoaned(numberBooksLoaned);
+refresh.addEventListener("click", async () => {
+	numberBooks = await getNumberOfBooks().catch((error) => console.error(error));
+	refreshnumberBooks(numberBooks);
 });
 
-const displaynumberBooksLoaned = (num) => {
+const displaynumberBooks = async () => {
+	const num = await getNumberOfBooks().catch((error) => console.error(error));
 	const numArray = Array.from(String(num), Number);
 	for (let i = 0; i < digits.length; i++) {
 		let digit = digits[i];
@@ -110,7 +122,7 @@ const displaynumberBooksLoaned = (num) => {
 	}
 };
 
-const refreshnumberBooksLoaned = (num) => {
+const refreshnumberBooks = (num) => {
 	const numArray = Array.from(String(num), Number);
 	for (let i = 0; i < digits.length; i++) {
 		let digit = digits[i];
@@ -124,7 +136,101 @@ const refreshnumberBooksLoaned = (num) => {
 	}
 };
 
-displaynumberBooksLoaned(numberBooksLoaned);
+displaynumberBooks();
+
+// Display favourite books on home page
+const loadFavourites = async () => {
+	try {
+		const response = await fetch("/api/favourites");
+		const books = await response.json();
+		return books;
+	} catch (error) {
+		console.error("Error fetching favourites data:", error);
+		throw error;
+	}
+};
+
+const renderFavourites = async () => {
+	const favourites = document.getElementById("favourites");
+	favourites.innerHTML = "";
+
+	try {
+		const books = await loadFavourites();
+		books.forEach((book) => {
+			createFavouriteElement(book, favourites);
+		});
+	} catch (error) {
+		console.error("Error rendering the favourites:", error);
+	}
+};
+
+const createFavouriteElement = (book, container) => {
+	const bookContainer = document.createElement("div");
+	bookContainer.classList.add(
+		"rounded-3xl",
+		"w-full",
+		"h-16",
+		"bg-gray-200",
+		"flex",
+		"justify-between",
+		"items-center",
+		"p-4",
+		"mt-4",
+		"transition",
+		"duration-500",
+		"ease-in-out",
+		"hover:bg-gray-300"
+	);
+
+	const textContainer = document.createElement("div");
+	textContainer.classList.add("flex", "flex-col", "justify-center", "items-start");
+
+	const title = document.createElement("h3");
+	title.classList.add("font-bold", "text-black", "text-sm");
+	title.innerText = book.title;
+
+	const author = document.createElement("p");
+	author.classList.add("text-sm");
+	author.innerText = book.authors;
+
+	textContainer.appendChild(title);
+	textContainer.appendChild(author);
+
+	const favouriteButton = document.createElement("button");
+	const favouriteIcon = document.createElement("i");
+	favouriteIcon.classList.add("fa-solid", "fa-heart", "text-red-500");
+	favouriteButton.classList.add("rounded-full", "p-2", "w-10", "h-10", "hover:bg-gray-200");
+	favouriteButton.appendChild(favouriteIcon);
+
+	favouriteButton.addEventListener("click", async function () {
+		// Toggle the 'favourited' property of the book
+		book.favourited = !book.favourited;
+		container.removeChild(bookContainer); // Remove the book from the favourites
+
+		// Send a POST request to the server-side script
+		try {
+			const response = await fetch("/api/updateFavourite", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(book),
+			});
+
+			const data = await response.text();
+			console.log("Success:", data);
+		} catch (error) {
+			console.error("Error:", error);
+		}
+	});
+
+	bookContainer.appendChild(textContainer);
+	bookContainer.appendChild(favouriteButton);
+
+	container.appendChild(bookContainer);
+};
+
+renderFavourites();
 
 // Load books to library
 const loadBooks = async () => {
@@ -159,7 +265,7 @@ const renderBooks = async () => {
 		booksArray.forEach((book) => {
 			createBookElement(book, books);
 		});
-		sendVariables(); // Send the updated start and end variables to the server
+		sendVariables(start + 40, end + 40); // Send the updated start and end variables to the server
 	} catch (error) {
 		console.error("Error rendering the books:", error);
 	}
@@ -170,7 +276,7 @@ const createBookElement = (book, books) => {
 	const image = document.createElement("img");
 	image.src = book.thumbnailUrl;
 	image.alt = "Book Thumbnail";
-	image.classList.add("h-[188px]");
+	image.classList.add("h-full");
 
 	// Store the image in a container to aid in positioning
 	const imageContainer = document.createElement("div");
@@ -241,6 +347,9 @@ const createBookElement = (book, books) => {
 
 			const data = await response.text();
 			console.log("Success:", data);
+
+			// If the book is favourited, add it to the favourites section
+			renderFavourites();
 		} catch (error) {
 			console.error("Error:", error);
 		}
@@ -331,14 +440,14 @@ const createBookElement = (book, books) => {
 		"justify-around",
 		"flex-col",
 		"items-center",
-		"h-5/6",
 		"bg-white",
 		"rounded-3xl",
 		"p-4",
 		"m-4",
 		"w-60",
 		"h-80",
-		"cursor-pointer"
+		"cursor-pointer",
+		"overflow-hidden"
 	);
 	bookContainer.id = "books-container";
 
@@ -362,18 +471,20 @@ window.onload = () => {
 
 // Load more books
 const loadMore = document.getElementById("load-more");
-const booksContainer = document.getElementById("books-container");
+const booksOuterContainer = document.getElementById("books-outer-container");
 
 loadMore.classList.add("opacity-0"); // Hide the load more button
 
 // When the user scrolls to the bottom of the page, show the load more button
-booksContainer.onscroll = () => {
-	if (booksContainer.scrollTop + booksContainer.clientHeight >= booksContainer.scrollHeight - 10) {
-		loadMore.classList.remove("opacity-0");
-		loadMore.classList.add("opacity-70", "hover:opacity-100", "cursor-pointer");
-	} else {
-		loadMore.classList.add("opacity-0");
-		loadMore.classList.remove("opacity-70", "hover:opacity-100", "cursor-pointer");
+booksOuterContainer.onscroll = () => {
+	if (document.getElementById("search").value == "") {
+		if (booksOuterContainer.scrollTop + booksOuterContainer.clientHeight >= booksOuterContainer.scrollHeight - 30) {
+			loadMore.classList.remove("opacity-0");
+			loadMore.classList.add("opacity-70", "hover:opacity-100", "cursor-pointer");
+		} else {
+			loadMore.classList.add("opacity-0");
+			loadMore.classList.remove("opacity-70", "hover:opacity-100", "cursor-pointer");
+		}
 	}
 };
 
@@ -387,11 +498,8 @@ loadMore.addEventListener("click", () => {
 });
 
 // Update the start and end variables so that when load more is clicked again it loads the next 40 books
-const sendVariables = async () => {
+const sendVariables = async (start, end) => {
 	try {
-		start += 40;
-		end += 40;
-
 		const response = await fetch("/api/variables", {
 			method: "POST",
 			headers: {
@@ -442,6 +550,11 @@ form.onsubmit = async (e) => {
 		} else {
 			console.log("Book added successfully");
 			form.reset();
+
+			sendVariables(0, 40);
+
+			document.getElementById("books-container").innerHTML = "";
+			renderBooks();
 		}
 	} catch (error) {
 		console.error("Error adding new book:", error);
@@ -452,3 +565,74 @@ const addBooktoLibrary = (book) => {
 	const books = document.getElementById("books-container");
 	createBookElement(book, books);
 };
+
+// Search bar
+const search = document.getElementById("search");
+
+search.addEventListener("keyup", async (e) => {
+	text = e.target.value;
+
+	const results = await searchBooks(text);
+
+	const books = document.getElementById("books-container");
+
+	books.innerHTML = "";
+
+	results.forEach((book) => {
+		createBookElement(book, books);
+	});
+});
+
+const searchBooks = async (text) => {
+	// If the text is undefined, return an empty array
+	if (text === undefined) {
+		return [];
+	}
+
+	try {
+		const response = await fetch(`/api/search?book=${encodeURIComponent(text)}`);
+		const books = await response.json();
+
+		// Sort the books based on the similarity to the search text
+		books.sort((a, b) => {
+			const similarityA = calculateSimilarity(a.title, text);
+			const similarityB = calculateSimilarity(b.title, text);
+
+			// Sort in descending order of similarity
+			return similarityB - similarityA;
+		});
+
+		return books;
+	} catch (error) {
+		console.error("Error fetching search results:", error);
+		throw error;
+	}
+};
+
+// Function to calculate the similarity between two strings
+const calculateSimilarity = (str1, str2) => {
+	// Convert both strings to lowercase
+	str1 = str1.toLowerCase();
+	str2 = str2.toLowerCase();
+
+	// Calculate the number of matching characters
+	let matches = 0;
+	for (let i = 0; i < str1.length; i++) {
+		if (str1[i] === str2[i]) {
+			matches++;
+		}
+	}
+
+	// Return the number of matches as the similarity
+	return matches;
+};
+
+// Get references to the search icon and title
+const searchIcon = document.getElementById("search-icon");
+const title = document.getElementById("library-title");
+
+searchIcon.addEventListener("click", () => {
+	search.classList.toggle("hidden"); // Toggle the visibility of the search bar
+	title.classList.toggle("hidden"); // Toggle the visibility of the title
+	search.classList.toggle("w-4/5");
+});

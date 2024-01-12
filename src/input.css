@@ -65,6 +65,9 @@
 	.label {
 		display: none;
 	}
+	.page-link {
+		justify-content: center;
+	}
 }
 
 /* Custom scrollbar taken and editted from https://ishadeed.com/article/custom-scrollbars-css/ */
@@ -83,6 +86,7 @@
 }
 
 .books-number {
+	margin: 5px;
 	height: 59px;
 	color: white;
 	background-color: rgb(88, 88, 88);

@@ -26,23 +26,6 @@ app.get("/api/newreleases", (req, res) => {
 	res.send(newReleases);
 });
 
-// Search API
-app.get("/api/search", (req, res) => {
-	const results = [];
-	const title = req.query.book.split();
-	for (const book of books) {
-		for (let i = 0; i < title.length; i++) {
-			if (book.title.split().includes(title[i])) {
-				results.push(book);
-			}
-		}
-	}
-	if (results.length === 0) {
-		results.push("No books found with that title");
-	}
-	res.send(results);
-});
-
 // Library API
 let start = 0;
 let end = 40;
@@ -50,6 +33,21 @@ let end = 40;
 app.get("/api/books", (req, res) => {
 	// Loads the books 40 books at a time to avoid load times
 	res.send(books.slice(start, end));
+});
+
+app.get("/api/numberbooks", (req, res) => {
+	res.send(`${books.length}`);
+});
+
+// GET method for favourites
+app.get("/api/favourites", (req, res) => {
+	const favourites = [];
+	for (const book of books) {
+		if (book.favourited) {
+			favourites.push(book);
+		}
+	}
+	res.send(favourites);
 });
 
 // Send variables to client side code
@@ -80,7 +78,7 @@ app.post("/api/books", async (req, res) => {
 		console.log(newBook);
 		temp_books.push(newBook);
 
-		await fs.writeFile("./src/books.json", JSON.stringify(books, null, 2));
+		await fs.writeFile("./src/books.json", JSON.stringify(temp_books, null, 2));
 		books = temp_books;
 		res.status(200).send("Book added successfully");
 	} catch (error) {
@@ -136,10 +134,30 @@ app.delete("/api/books", async (req, res) => {
 	}
 });
 
+// GET method to search for books
+app.get("/api/search", (req, res) => {
+	const results = [];
+	const title = req.query.book.toLowerCase();
+
+	for (const book of books) {
+		if (book.title.toLowerCase().includes(title)) {
+			results.push(book);
+		}
+	}
+
+	if (results.length === 0) {
+		results.push({ title: "No results found", thumbnailUrl: "img/no-results.jpg", authors: "", _id: 0 });
+	}
+
+	res.send(results);
+});
+
 // Wildcard route to make sure that any request that doesn't match the ones above gets sent to index.html
 app.get("*", (req, res) => {
 	res.sendFile(path.join(__dirname, "/src/index.html"));
 });
 
 // Start the server
-app.listen(PORT, () => console.log(`Server running at http://127.0.0.1:${PORT}/#home` /* Sets a link in the console to take you to the home page */));
+app.listen(PORT, () =>
+	console.log(`Server running at http://127.0.0.1:${PORT}/#home` /* Sends a link to the console to take you to the home page */)
+);

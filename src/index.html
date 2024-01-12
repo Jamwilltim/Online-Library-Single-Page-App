@@ -19,22 +19,22 @@
 		<div
 			class="grey-border xl:rounded-2xl glass-sidebar xl:max-w-[400px] xl:w-1/6 xl:h-4/5 w-full h-[7%] xl:mr-10 flex xl:flex-col flex-row justify-between items-center xl:px-10 xl:pb-5 xl:pt-10 p-3"
 		>
-			<div class="buttons xl:h-1/3 xl:pb-8 h-full xl:w-full w-5/6 flex xl:flex-col flex-row justify-between xl:border-b-2">
+			<div class="buttons xl:h-[40%] xl:pb-4 h-full xl:w-full w-5/6 flex xl:flex-col flex-row justify-between xl:border-b-2">
 				<button class="sidebar-button sidebar-buttons grey-border" id="home-button">
-					<a href="/#home" class="w-full h-full flex items-center justify-start flex-row"
+					<a href="/#home" class="page-link w-full h-full flex items-center justify-start flex-row"
 						><i class="fa-solid fa-house pr-4"></i><span class="label">Home</span></a
 					>
 				</button>
 				<button class="sidebar-button sidebar-buttons grey-border" id="library-button">
-					<a href="/#library" class="w-full h-full flex items-center justify-start flex-row">
+					<a href="/#library" class="page-link w-full h-full flex items-center justify-start flex-row">
 						<i class="fa-solid fa-magnifying-glass pr-4"></i>
 						<span class="label">Browse Our Library</span></a
 					>
 				</button>
-				<button class="sidebar-button sidebar-buttons grey-border" id="loans-button">
-					<a href="/#loans" class="w-full h-full flex items-center justify-start flex-row">
-						<i class="fa-solid fa-calendar-days pr-4"></i>
-						<span class="label">Book loaning</span></a
+				<button class="sidebar-button sidebar-buttons grey-border" id="authors-button">
+					<a href="/#authors" class="page-link w-full h-full flex items-center justify-start flex-row">
+						<i class="fa-solid fa-user pr-4"></i>
+						<span class="label">Browse Authors</span></a
 					>
 				</button>
 			</div>
@@ -54,9 +54,9 @@
 									id="profile-picture"
 								/>
 							</div>
-							<label for="profile-picture" class="label pr-1 cursor-pointer">James Harvey</label>
-							<i class="fa-solid fa-keyq hidden"></i></div
-					></a>
+							<label class="label pr-1 cursor-pointer">James Harvey</label>
+						</div>
+					</a>
 				</div>
 			</div>
 		</div>
@@ -69,7 +69,7 @@
 				</div>
 				<div class="scrollbar h-[calc(100%-80px)] grid md:grid-cols-2 gap-2 w-full overflow-y-scroll">
 					<div class="md:grid md:grid-rows-3 md:gap-2 flex flex-col">
-						<div class="bg-white opacity-75 rounded-3xl md:row-span-2 md:h-auto mb-3 md:mb-0 p-5 overflow-hidden">
+						<div class="bg-white opacity-75 rounded-3xl md:row-span-2 mb-3 md:mb-0 p-5 overflow-hidden">
 							<div class="h-1/6">
 								<h1 class="text-3xl font-bold pb-2">New Releases</h1>
 								<hr />
@@ -78,13 +78,13 @@
 						</div>
 						<div class="bg-white opacity-75 rounded-3xl md:h-auto p-5 overflow-hidden flex flex-col items-center">
 							<div class="h-auto w-full flex flex-row justify-between items-center">
-								<h1 class="text-3xl font-bold pb-2">Book Loans</h1>
+								<h1 class="text-3xl font-bold pb-2">Number of books</h1>
 								<div class="h-full flex items-center cursor-pointer refresh" id="refresh-button">
 									<i class="fa-solid fa-arrow-rotate-right fa-flip-horizontal"></i>
 								</div>
 							</div>
 							<hr class="w-full" />
-							<div class="w-2/3 max-w-[240px] h-auto flex flex-row items-center justify-around pt-5">
+							<div class="flex flex-row items-center justify-around pt-5">
 								<div class="books-number">
 									<div class="flex flex-col digit">
 										<span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
@@ -111,64 +111,17 @@
 										><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
 									</div>
 								</div>
-								<div class="books-number">
-									<div class="flex flex-col digit">
-										<span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
-										><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span
-										><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span
-										><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span
-										><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span
-										><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span
-										><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span
-										><span>9</span>
-									</div>
-								</div>
-								<div class="books-number">
-									<div class="flex flex-col digit">
-										<span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
-										><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span
-										><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span
-										><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span
-										><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span
-										><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span
-										><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span
-										><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span
-										><span>6</span><span>7</span><span>8</span><span>9</span>
-									</div>
-								</div>
-								<div class="books-number">
-									<div class="flex flex-col digit">
-										<span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
-										><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span
-										><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span
-										><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span
-										><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span
-										><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span
-										><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span
-										><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span
-										><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span
-										><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
-									</div>
-								</div>
 							</div>
 							<div class="h-auto pt-3">in the last year</div>
 						</div>
 					</div>
-					<div class="md:grid md:grid-rows-4 md:gap-2 flex flex-col">
-						<div class="bg-white opacity-75 rounded-3xl md:row-span-2 md:h-auto p-5 overflow-hidden">
-							<div class="h-1/6">
-								<h1 class="text-3xl font-bold pb-2">About Us</h1>
-								<hr />
-							</div>
+					<div class="bg-white opacity-75 md:overflow-hidden rounded-3xl p-5 h-full">
+						<div class="h-10">
+							<h1 class="text-3xl font-bold pb-2">Favourites</h1>
+							<hr />
 						</div>
-						<div class="bg-white opacity-75 rounded-3xl md:h-auto p-5 overflow-hidden md:row-span-2">
-							<div class="h-1/6">
-								<h1 class="text-3xl font-bold pb-2">Favourites</h1>
-								<hr />
-							</div>
-							<div class="mt-4">
-								<div class="rounded-3xl w-full h-16 bg-gray-200"></div>
-							</div>
+						<div id="favourites-container" class="h-[calc(100%-40px)] overflow-y-scroll scrollbar w-full">
+							<div id="favourites" class="h-auto"></div>
 						</div>
 					</div>
 				</div>
@@ -177,24 +130,35 @@
 				class="main-page h-[calc(100%-88px)] opacity-0 absolute sm:w-[calc(100%-2*2.75rem)] w-[calc(100%-2*0.5rem)] transition-all duration-500"
 			>
 				<div class="flex justify-between w-full border-b-2 h-14 mb-6">
-					<strong><h1 class="text-4xl">Browse Library</h1></strong>
-					<input class="h-4/5 p-5 rounded-full focus:outline-none" type="text" id="search" placeholder="Search for books..." />
+					<strong><h1 class="text-4xl" id="library-title">Browse Library</h1></strong>
+					<input
+						class="h-4/5 p-5 rounded-full focus:outline-none sm:block hidden transition-all duration-200"
+						type="text"
+						id="search"
+						placeholder="Search for books..."
+					/>
+					<div class="flex justify-center items-center w-12 sm:hidden">
+						<div class="h-8">
+							<i id="search-icon" class="fa-solid fa-search cursor-pointer"></i>
+						</div>
+					</div>
 				</div>
-				<div id="books-container" class="scrollbar h-[calc(100%-80px)] w-full overflow-y-scroll grid grid-cols-4"></div>
-				<div
-					id="load-more"
-					class="absolute transition-all duration-200 w-10 h-10 bg-white rounded-full top-full] left-1/2 translate-x-[-50%] translate-y-[-50%]"
-				>
-					<div class="w-full h-full flex justify-center items-center">
-						<div class="w-5 h-5 flex justify-center items-center">
-							<i class="fa-solid fa-arrow-down"></i>
+				<div id="books-outer-container" class="scrollbar h-[calc(100%-80px)] w-full overflow-y-scroll">
+					<div id="books-container" class="h-auto grid 2xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 place-items-center grid-cols-1"></div>
+					<div class="flex justify-center">
+						<div id="load-more" class="transition-all duration-200 w-10 h-10 bg-white rounded-full">
+							<div class="w-full h-full flex justify-center items-center">
+								<div class="w-5 h-5 flex justify-center items-center">
+									<i class="fa-solid fa-arrow-down"></i>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="main-page opacity-0 absolute w-[calc(100%-2*2.75rem)] transition-all duration-500">
 				<div class="flex justify-between w-full pb-5 border-b-2 h-auto">
-					<strong><h1 class="text-4xl">Borrow books</h1></strong>
+					<strong><h1 class="text-4xl">Browse Authors</h1></strong>
 				</div>
 			</div>
 			<div
@@ -203,7 +167,7 @@
 				<div class="flex justify-between w-full border-b-2 h-14 mb-6">
 					<strong><h1 class="text-4xl">Administrator</h1></strong>
 				</div>
-				<div class="h-[calc(100%-80px)] w-full overflow-y-hidden flex flex-col">
+				<div class="h-[calc(100%-80px)] w-full md:overflow-y-hidden flex flex-col overflow-y-scroll scrollbar">
 					<p>If you want to add a new book to the library fill in the form below and press submit</p>
 					<form
 						method="post"
@@ -233,9 +197,9 @@
 							<div class="flex flex-col">
 								<label for="thumbnailUrl" class="pb-2">Cover</label>
 								<input
-									type="file"
 									name="thumbnailUrl"
 									id="book-cover"
+									placeholder="Insert cover url"
 									class="grey-border rounded-2xl p-2 bg-white focus:outline-none"
 								/>
 							</div>
@@ -248,7 +212,7 @@
 								></textarea>
 							</div>
 						</div>
-						<div class="h-16 col-span-2 grid place-items-center">
+						<div class="h-16 col-span-2 grid place-items-center md:mt-0 mt-5">
 							<button
 								type="submit"
 								class="bg-white text-black py-2 px-4 rounded-full grey-border border-gray-300 hover:bg-gray-100 transition-all"
