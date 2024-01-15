@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
-let books = require("./src/books.json");
+let books = require("./src/json/books.json");
+let reviews = require("./src/json/reviews.json");
 const fs = require("fs").promises;
 
 const app = express();
@@ -15,6 +16,7 @@ for (const book of books) {
 	}
 }
 
+// |-------------------- Home page API --------------------|
 // New releases API
 app.get("/api/newreleases", (req, res) => {
 	const newReleases = [];
@@ -26,7 +28,18 @@ app.get("/api/newreleases", (req, res) => {
 	res.send(newReleases);
 });
 
-// Library API
+// GET method for favourites
+app.get("/api/favourites", (req, res) => {
+	const favourites = [];
+	for (const book of books) {
+		if (book.favourited) {
+			favourites.push(book);
+		}
+	}
+	res.send(favourites);
+});
+
+// |-------------------- Library page API --------------------|
 let start = 0;
 let end = 40;
 
@@ -37,17 +50,6 @@ app.get("/api/books", (req, res) => {
 
 app.get("/api/numberbooks", (req, res) => {
 	res.send(`${books.length}`);
-});
-
-// GET method for favourites
-app.get("/api/favourites", (req, res) => {
-	const favourites = [];
-	for (const book of books) {
-		if (book.favourited) {
-			favourites.push(book);
-		}
-	}
-	res.send(favourites);
 });
 
 // Send variables to client side code
@@ -66,7 +68,7 @@ app.post("/api/variables", (req, res) => {
 app.post("/api/books", async (req, res) => {
 	try {
 		const newBook = req.body;
-		const data = await fs.readFile("./src/books.json", "utf8");
+		const data = await fs.readFile("./src/json/books.json", "utf8");
 		const temp_books = JSON.parse(data);
 
 		// Set the id of the new book to be one more than the id of the last book in the array
@@ -78,7 +80,7 @@ app.post("/api/books", async (req, res) => {
 		console.log(newBook);
 		temp_books.push(newBook);
 
-		await fs.writeFile("./src/books.json", JSON.stringify(temp_books, null, 2));
+		await fs.writeFile("./src/json/books.json", JSON.stringify(temp_books, null, 2));
 		books = temp_books;
 		res.status(200).send("Book added successfully");
 	} catch (error) {
@@ -90,7 +92,7 @@ app.post("/api/books", async (req, res) => {
 app.post("/api/updateFavourite", async (req, res) => {
 	try {
 		const updatedBook = req.body;
-		const data = await fs.readFile("./src/books.json", "utf8");
+		const data = await fs.readFile("./src/json/books.json", "utf8");
 		const temp_books = JSON.parse(data);
 
 		// Find the book that needs to be updated
@@ -102,7 +104,7 @@ app.post("/api/updateFavourite", async (req, res) => {
 		}
 
 		// Write the updated book data back to the file
-		await fs.writeFile("./src/books.json", JSON.stringify(temp_books, null, 2));
+		await fs.writeFile("./src/json/books.json", JSON.stringify(temp_books, null, 2));
 		books = temp_books;
 		res.status(200).send("Book updated successfully");
 	} catch (error) {
@@ -114,7 +116,7 @@ app.post("/api/updateFavourite", async (req, res) => {
 app.delete("/api/books", async (req, res) => {
 	try {
 		const bookToDelete = req.body;
-		const data = await fs.readFile("./src/books.json", "utf8");
+		const data = await fs.readFile("./src/json/books.json", "utf8");
 		const temp_books = JSON.parse(data);
 
 		// Find the book that needs to be deleted
@@ -126,7 +128,7 @@ app.delete("/api/books", async (req, res) => {
 		}
 
 		// Write the updated book data back to the file
-		await fs.writeFile("./src/books.json", JSON.stringify(temp_books, null, 2));
+		await fs.writeFile("./src/json/books.json", JSON.stringify(temp_books, null, 2));
 		books = temp_books;
 		res.status(200).send("Book deleted successfully");
 	} catch (error) {
@@ -152,6 +154,13 @@ app.get("/api/search", (req, res) => {
 	res.send(results);
 });
 
+// |-------------------- Reviews page API --------------------|
+// GET method for reviews
+app.get("/api/reviews", (req, res) => {
+	res.send(reviews);
+});
+
+// |-------------------- Aditional functions API --------------------|
 // Wildcard route to make sure that any request that doesn't match the ones above gets sent to index.html
 app.get("*", (req, res) => {
 	res.sendFile(path.join(__dirname, "/src/index.html"));

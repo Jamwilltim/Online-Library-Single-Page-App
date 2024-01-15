@@ -1,11 +1,14 @@
-// Page switcher
+// |-------------------- Page Switching functions --------------------|
+// Function to get current page based on url
 const getCurrentPage = () => {
 	return window.location.href.split("/").pop().split("#").pop();
 };
 
+// Define the menu buttons and pages
 const menuButtons = document.querySelectorAll(".sidebar-buttons");
 const pages = document.querySelectorAll(".main-page");
 
+// Function to change the styling on the selcted page button
 const changeActiveButton = (newActiveButtonId) => {
 	let activeButton = document.querySelector(".active-button");
 	if (activeButton) {
@@ -17,6 +20,7 @@ const changeActiveButton = (newActiveButtonId) => {
 	}
 };
 
+// Add event listeners to the menu buttons
 menuButtons.forEach((e) => {
 	e.addEventListener("click", () => {
 		changeActiveButton(e.id);
@@ -24,6 +28,7 @@ menuButtons.forEach((e) => {
 	});
 });
 
+// Function to change the pages by adjusting their opacity, this allows for a fade transition
 const changePages = () => {
 	let currentPage = getCurrentPage();
 	for (let i = 0; i < pages.length; i++) {
@@ -39,14 +44,17 @@ const changePages = () => {
 	}
 };
 
+// Add event listener to the window to change the page when the url changes
 window.onhashchange = () => {
 	changeActiveButton(getCurrentPage().concat("-button"));
 	changePages();
 };
 
+// When the page loads, change the active button and page so they match the url
 changeActiveButton(getCurrentPage().concat("-button"));
 changePages();
 
+// |-------------------- Home page js --------------------|
 // New releases section
 const loadNewReleases = async () => {
 	try {
@@ -88,6 +96,7 @@ const renderNewReleases = async () => {
 	}
 };
 
+// Render the new releases on load
 renderNewReleases();
 
 // Digit spinner for the number of books sold in the last year
@@ -95,7 +104,7 @@ const refresh = document.getElementById("refresh-button");
 
 const getNumberOfBooks = async () => {
 	try {
-		const response = await fetch("/books.json");
+		const response = await fetch("/json/books.json");
 		const data = await response.json();
 		const numberOfBooks = data.length;
 		return numberOfBooks;
@@ -107,11 +116,15 @@ const getNumberOfBooks = async () => {
 
 const digits = document.getElementsByClassName("digit");
 
+// Event listener for the refresh button
 refresh.addEventListener("click", async () => {
 	numberBooks = await getNumberOfBooks().catch((error) => console.error(error));
 	refreshnumberBooks(numberBooks);
 });
 
+// Function which translates the spinner such that the correct digit is displayed
+// Each digit has index * 10 numbers in it so it needs to be translated more the higher the index
+// Inspired by hyperplexed's video on YouTube: https://www.youtube.com/watch?v=HIrDMR6CaHY&ab_channel=Hyperplexed
 const displaynumberBooks = async () => {
 	const num = await getNumberOfBooks().catch((error) => console.error(error));
 	const numArray = Array.from(String(num), Number);
@@ -122,6 +135,7 @@ const displaynumberBooks = async () => {
 	}
 };
 
+// Handles the refresh button being clicked
 const refreshnumberBooks = (num) => {
 	const numArray = Array.from(String(num), Number);
 	for (let i = 0; i < digits.length; i++) {
@@ -136,6 +150,7 @@ const refreshnumberBooks = (num) => {
 	}
 };
 
+// Play the animation when the page loads
 displaynumberBooks();
 
 // Display favourite books on home page
@@ -164,6 +179,7 @@ const renderFavourites = async () => {
 	}
 };
 
+// Function to create a favourite element
 const createFavouriteElement = (book, container) => {
 	const bookContainer = document.createElement("div");
 	bookContainer.classList.add(
@@ -202,6 +218,7 @@ const createFavouriteElement = (book, container) => {
 	favouriteButton.classList.add("rounded-full", "p-2", "w-10", "h-10", "hover:bg-gray-200");
 	favouriteButton.appendChild(favouriteIcon);
 
+	// Add an event listener to toggle the heart icon and send a POST request to the server-side script
 	favouriteButton.addEventListener("click", async function () {
 		// Toggle the 'favourited' property of the book
 		book.favourited = !book.favourited;
@@ -230,8 +247,10 @@ const createFavouriteElement = (book, container) => {
 	container.appendChild(bookContainer);
 };
 
+// Render the favourites on load
 renderFavourites();
 
+// |-------------------- Library page js --------------------|
 // Load books to library
 const loadBooks = async () => {
 	try {
@@ -527,45 +546,6 @@ window.addEventListener("beforeunload", () => {
 	});
 });
 
-// Book form
-const form = document.getElementById("add-book-form");
-
-form.onsubmit = async (e) => {
-	e.preventDefault();
-	const data = new FormData(e.target);
-	const book = Object.fromEntries(data.entries());
-	try {
-		const response = await fetch("/api/books", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(book),
-		});
-
-		addBooktoLibrary(book);
-
-		if (!response.ok) {
-			throw new Error(`HTTP error! status: ${response.status}`);
-		} else {
-			console.log("Book added successfully");
-			form.reset();
-
-			sendVariables(0, 40);
-
-			document.getElementById("books-container").innerHTML = "";
-			renderBooks();
-		}
-	} catch (error) {
-		console.error("Error adding new book:", error);
-	}
-};
-
-const addBooktoLibrary = (book) => {
-	const books = document.getElementById("books-container");
-	createBookElement(book, books);
-};
-
 // Search bar
 const search = document.getElementById("search");
 
@@ -636,3 +616,125 @@ searchIcon.addEventListener("click", () => {
 	title.classList.toggle("hidden"); // Toggle the visibility of the title
 	search.classList.toggle("w-4/5");
 });
+
+// |-------------------- Reviews page js --------------------|
+// Load reviews
+const loadReviews = async () => {
+	try {
+		const response = await fetch("/api/reviews");
+		const reviews = await response.json();
+		return reviews;
+	} catch (error) {
+		console.error("Error fetching reviews data:", error);
+		throw error;
+	}
+};
+
+// Display reviews
+const renderReviews = async () => {
+	const reviews = document.getElementById("reviews-container");
+
+	try {
+		const reviewsArray = await loadReviews();
+		reviewsArray.forEach((review) => {
+			createReviewElement(review, reviews);
+		});
+	} catch (error) {
+		console.error("Error rendering the reviews:", error);
+	}
+};
+
+const createReviewElement = (review, reviews) => {
+	// Create the top bar
+	const topBar = document.createElement("div");
+	topBar.classList.add("h-1/5", "flex", "justify-between", "items-center", "pb-4");
+
+	// Add the reviewer's name
+	const reviewer = document.createElement("div");
+	reviewer.classList.add("text-slate-400");
+	reviewer.innerText = review.reviewer;
+
+	// Add the rating
+	const rating = document.createElement("div");
+	rating.classList.add("flex", "flex-row", "items-center", "text-3xl");
+	const number = document.createElement("span");
+	number.classList.add("pr-4");
+	number.innerText = review.rating;
+	rating.appendChild(number);
+	for (let i = 0; i < Math.round(review.rating); i++) {
+		const star = document.createElement("i");
+		star.classList.add("fa-solid", "fa-star", "text-yellow-400", "pr-4");
+		rating.appendChild(star);
+	}
+	for (let i = 0; i < 5 - Math.round(review.rating); i++) {
+		const star = document.createElement("i");
+		star.classList.add("fa-regular", "fa-star", "pr-4");
+		rating.appendChild(star);
+	}
+
+	topBar.appendChild(rating);
+	topBar.appendChild(reviewer);
+
+	// Add the review text
+	const reviewText = document.createElement("div");
+	reviewText.classList.add("h-4/5", "flex", "flex-col", "justify-between");
+	const title = document.createElement("h1");
+	title.classList.add("font-semibold", "text-xl", "pb-2");
+	title.innerText = review.title;
+	const text = document.createElement("p");
+	text.classList.add("max-h-44", "overflow-y-scroll", "scrollbar");
+	text.innerText = review.text;
+
+	reviewText.appendChild(title);
+	reviewText.appendChild(text);
+
+	// Append the top bar and review text to the review container
+	const reviewContainer = document.createElement("div");
+	reviewContainer.classList.add("bg-white", "rounded-3xl", "w-[calc(100%-5px)]", "p-8", "max-h-80", "mb-4");
+	reviewContainer.appendChild(topBar);
+	reviewContainer.appendChild(reviewText);
+
+	reviews.appendChild(reviewContainer);
+};
+
+renderReviews();
+
+// |-------------------- Administrator page js --------------------|
+// Book form
+const form = document.getElementById("add-book-form");
+
+form.onsubmit = async (e) => {
+	e.preventDefault();
+	const data = new FormData(e.target);
+	const book = Object.fromEntries(data.entries());
+	try {
+		const response = await fetch("/api/books", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(book),
+		});
+
+		addBooktoLibrary(book);
+
+		if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`);
+		} else {
+			console.log("Book added successfully");
+			form.reset();
+
+			sendVariables(0, 40);
+
+			document.getElementById("books-container").innerHTML = "";
+			renderBooks();
+		}
+	} catch (error) {
+		console.error("Error adding new book:", error);
+	}
+};
+
+const addBooktoLibrary = (book) => {
+	const books = document.getElementById("books-container");
+	createBookElement(book, books);
+};
