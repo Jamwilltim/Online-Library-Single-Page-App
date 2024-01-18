@@ -1,4 +1,9 @@
 // |-------------------- Page Switching functions --------------------|
+// Redirect to the home page if the url is just the domain
+if (window.location.href.split("/").pop() === "") {
+	window.location.href = window.location.href + "#home";
+}
+
 // Function to get current page based on url
 const getCurrentPage = () => {
 	return window.location.href.split("/").pop().split("#").pop();
@@ -79,13 +84,13 @@ const renderNewReleases = async () => {
 			imageContainer.classList.add("pb-2", "h-max-[188px]");
 			imageContainer.appendChild(image);
 			const title = document.createElement("h3");
-			title.classList.add("font-bold");
+			title.classList.add("font-bold", "text-center");
 			title.innerText = book.title;
 			const author = document.createElement("p");
 			author.classList.add("w-2/3", "text-center");
 			author.innerText = book.authors;
 			const newRelease = document.createElement("div");
-			newRelease.classList.add("flex", "justify-center", "flex-col", "items-center", "h-5/6");
+			newRelease.classList.add("flex", "justify-center", "flex-col", "items-center", "h-5/6", "m-4", "w-40");
 			newRelease.appendChild(imageContainer);
 			newRelease.appendChild(title);
 			newRelease.appendChild(author);
@@ -295,7 +300,7 @@ const createBookElement = (book, books) => {
 	const image = document.createElement("img");
 	image.src = book.thumbnailUrl;
 	image.alt = "Book Thumbnail";
-	image.classList.add("h-full");
+	image.classList.add("h-full", "no-select");
 
 	// Store the image in a container to aid in positioning
 	const imageContainer = document.createElement("div");
@@ -314,7 +319,7 @@ const createBookElement = (book, books) => {
 
 	// Create a div for the front of the card
 	const bookFront = document.createElement("div");
-	bookFront.classList.add("flex", "flex-col", "justify-around", "items-center", "h-full");
+	bookFront.classList.add("flex", "flex-col", "justify-around", "items-center", "h-full", "no-select");
 	bookFront.appendChild(imageContainer); // Append all of the elements on the front
 	bookFront.appendChild(title);
 	bookFront.appendChild(author);
@@ -327,7 +332,7 @@ const createBookElement = (book, books) => {
 
 	// Create a div for the buttons on the back of the card
 	const buttons = document.createElement("div");
-	buttons.classList.add("flex", "justify-between", "w-full", "mb-4");
+	buttons.classList.add("flex", "justify-between", "w-full", "mb-4", "no-select");
 
 	// Create a heart button to toggle whether the book is favourited
 	const favouriteButton = document.createElement("button");
@@ -403,6 +408,9 @@ const createBookElement = (book, books) => {
 				});
 
 				renderBooks();
+				if (book.newrelease) {
+					renderNewReleases();
+				}
 
 				if (!response.ok) {
 					throw new Error(`HTTP error! status: ${response.status}`);
@@ -441,7 +449,7 @@ const createBookElement = (book, books) => {
 	const descriptionContainer = document.createElement("div"); // Create a div to contain the description
 
 	descriptionContainer.classList.add("overflow-y-scroll", "h-4/5", "scrollbar");
-	description.classList.add("text-center", "w-full", "text-black");
+	description.classList.add("text-center", "w-full", "text-black", "cursor-text");
 	description.innerText = book.shortDescription;
 
 	descriptionContainer.appendChild(description); // Append the description to the container
@@ -633,6 +641,7 @@ const loadReviews = async () => {
 // Display reviews
 const renderReviews = async () => {
 	const reviews = document.getElementById("reviews-container");
+	reviews.innerHTML = "";
 
 	try {
 		const reviewsArray = await loadReviews();
@@ -649,31 +658,72 @@ const createReviewElement = (review, reviews) => {
 	const topBar = document.createElement("div");
 	topBar.classList.add("h-1/5", "flex", "justify-between", "items-center", "pb-4");
 
+	const right = document.createElement("div");
+	right.classList.add("flex", "flex-row", "items-center", "justify-center");
+
+	// Add the bin logo
+	const bin = document.createElement("i");
+	bin.classList.add("fa-solid", "fa-trash", "text-gray-500", "pr-4", "cursor-pointer");
+
+	// Add an event listener to delete the review when clicked
+	bin.addEventListener("click", async () => {
+		// Ask if the user is sure they want to delete the review
+		const confirmDelete = window.confirm("Are you sure you want to delete this review?");
+
+		// If the user clicked OK, delete the review
+		if (confirmDelete) {
+			try {
+				const response = await fetch("/api/reviews", {
+					method: "DELETE",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(review),
+				});
+
+				renderReviews();
+
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				} else {
+					reviews.removeChild(reviewContainer); // Remove the review from the reviews
+					const data = await response.text();
+					console.log("Success:", data);
+				}
+			} catch (error) {
+				console.error("Error:", error);
+			}
+		}
+	});
+
 	// Add the reviewer's name
 	const reviewer = document.createElement("div");
 	reviewer.classList.add("text-slate-400");
 	reviewer.innerText = review.reviewer;
 
+	right.appendChild(bin);
+	right.appendChild(reviewer);
+
 	// Add the rating
 	const rating = document.createElement("div");
-	rating.classList.add("flex", "flex-row", "items-center", "text-3xl");
+	rating.classList.add("flex", "flex-row", "items-center", "text-3xl", "no-select");
 	const number = document.createElement("span");
 	number.classList.add("pr-4");
 	number.innerText = review.rating;
 	rating.appendChild(number);
-	for (let i = 0; i < Math.round(review.rating); i++) {
+	for (let i = 0; i < Math.floor(review.rating); i++) {
 		const star = document.createElement("i");
 		star.classList.add("fa-solid", "fa-star", "text-yellow-400", "pr-4");
 		rating.appendChild(star);
 	}
-	for (let i = 0; i < 5 - Math.round(review.rating); i++) {
+	for (let i = 0; i < 5 - Math.floor(review.rating); i++) {
 		const star = document.createElement("i");
 		star.classList.add("fa-regular", "fa-star", "pr-4");
 		rating.appendChild(star);
 	}
 
 	topBar.appendChild(rating);
-	topBar.appendChild(reviewer);
+	topBar.appendChild(right);
 
 	// Add the review text
 	const reviewText = document.createElement("div");
@@ -698,6 +748,138 @@ const createReviewElement = (review, reviews) => {
 };
 
 renderReviews();
+
+// Review form
+const reviewSearch = document.getElementById("review-search");
+const dropdown = document.getElementById("dropdown");
+
+reviewSearch.addEventListener("keyup", async (e) => {
+	text = e.target.value;
+	dropdown.innerHTML = "";
+
+	const results = await searchBooks(text);
+
+	results.forEach((book) => {
+		if (dropdown.children.length < 5) {
+			createReviewSearchElement(book);
+		}
+	});
+
+	if (reviewSearch.value.length > 0) {
+		dropdown.style.display = "block";
+	} else {
+		dropdown.style.display = "none";
+	}
+});
+
+const createReviewSearchElement = (book) => {
+	const container = document.createElement("div");
+	container.classList.add(
+		"flex",
+		"justify-between",
+		"items-center",
+		"p-2",
+		"hover:bg-gray-200",
+		"transition-colors",
+		"no-select",
+		"cursor-pointer"
+	);
+
+	const title = document.createElement("span");
+	title.innerText = book.title;
+	container.appendChild(title);
+
+	container.addEventListener("click", () => {
+		if (book.title !== "No results found") {
+			reviewSearch.value = book.title;
+			dropdown.style.display = "none";
+		}
+	});
+
+	dropdown.appendChild(container);
+};
+
+const reviewRating = document.getElementById("review-rating");
+const stars = document.querySelectorAll(".stars");
+
+stars.forEach((star, index) => {
+	star.addEventListener("click", () => {
+		reviewRating.value = index + 1;
+
+		stars.forEach((star, index) => {
+			if (index <= reviewRating.value - 1) {
+				star.classList.remove("fa-regular");
+				star.classList.add("fa-solid", "text-yellow-400");
+			} else {
+				star.classList.remove("fa-solid", "text-yellow-400");
+				star.classList.add("fa-regular");
+			}
+		});
+	});
+});
+
+// Adjust the stars depending on the number in the input box
+reviewRating.addEventListener("keyup", () => {
+	if (reviewRating.value.length > 1 && reviewRating.value[0] === "0" && reviewRating.value[1] !== ".") {
+		reviewRating.value = reviewRating.value[reviewRating.value.length - 1];
+	}
+
+	if (reviewRating.value > 5) {
+		reviewRating.value = 5;
+	} else if (reviewRating.value < 0) {
+		reviewRating.value = 0;
+	}
+
+	if (reviewRating.value === "") {
+		reviewRating.value = 0;
+	}
+
+	if ((reviewRating.value * 10) % 1 !== 0) {
+		temp = Math.floor(reviewRating.value * 10);
+		reviewRating.value = temp / 10;
+	}
+
+	stars.forEach((star, index) => {
+		if (index <= reviewRating.value - 1) {
+			star.classList.remove("fa-regular");
+			star.classList.add("fa-solid", "text-yellow-400");
+		} else {
+			star.classList.remove("fa-solid", "text-yellow-400");
+			star.classList.add("fa-regular");
+		}
+	});
+});
+
+const reviewForm = document.getElementById("add-review-form");
+
+reviewForm.onsubmit = async (e) => {
+	e.preventDefault();
+	if (dropdown.style.display !== "none") {
+		alert("Please enter a valid book title");
+		return;
+	}
+	const data = new FormData(e.target);
+	const review = Object.fromEntries(data.entries());
+	try {
+		const response = await fetch("/api/reviews", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(review),
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`);
+		} else {
+			console.log("Review added successfully");
+			reviewForm.reset();
+			renderReviews();
+		}
+	} catch (error) {
+		console.error("Error adding new review:", error);
+	}
+};
 
 // |-------------------- Administrator page js --------------------|
 // Book form
@@ -728,6 +910,7 @@ form.onsubmit = async (e) => {
 
 			document.getElementById("books-container").innerHTML = "";
 			renderBooks();
+			renderNewReleases();
 		}
 	} catch (error) {
 		console.error("Error adding new book:", error);
@@ -738,3 +921,27 @@ const addBooktoLibrary = (book) => {
 	const books = document.getElementById("books-container");
 	createBookElement(book, books);
 };
+
+// New release button
+const newReleaseButton = document.getElementById("book-newrelease");
+const newReleaseLabel = document.getElementById("new-release-label");
+const newReleaseLabelText = document.getElementById("new-release-label-text");
+const tick = document.getElementById("tick");
+
+newReleaseButton.addEventListener("change", () => {
+	if (newReleaseButton.checked) {
+		newReleaseLabelText.classList.remove("text-slate-800");
+		newReleaseLabelText.classList.add("text-blue-500");
+		newReleaseLabel.classList.remove("border-gray-300");
+		newReleaseLabel.classList.add("border-blue-500");
+		tick.classList.remove("opacity-0");
+		tick.classList.add("opacity-100");
+	} else {
+		newReleaseLabelText.classList.remove("text-blue-500");
+		newReleaseLabelText.classList.add("text-slate-800");
+		newReleaseLabel.classList.remove("border-blue-500");
+		newReleaseLabel.classList.add("border-gray-300");
+		tick.classList.remove("opacity-100");
+		tick.classList.add("opacity-0");
+	}
+});

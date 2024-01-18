@@ -74,7 +74,9 @@
 								<h1 class="text-3xl font-bold pb-2">New Releases</h1>
 								<hr />
 							</div>
-							<div id="new-releases-container" class="flex justify-center flex-col items-center h-5/6"></div>
+							<div class="flex h-5/6 w-full justify-start items-center overflow-x-auto scrollbar overflow-y-hidden">
+								<div id="new-releases-container" class="flex justify-start flex-row items-center"></div>
+							</div>
 						</div>
 						<div class="bg-white opacity-75 rounded-3xl md:h-auto p-5 overflow-hidden flex flex-col items-center">
 							<div class="h-auto w-full flex flex-row justify-between items-center">
@@ -86,14 +88,14 @@
 							<hr class="w-full" />
 							<div class="flex flex-row items-center justify-around pt-5">
 								<div class="books-number">
-									<div class="flex flex-col digit">
+									<div class="flex flex-col digit no-select">
 										<span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
 										><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span
 										><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
 									</div>
 								</div>
 								<div class="books-number">
-									<div class="flex flex-col digit">
+									<div class="flex flex-col digit no-select">
 										<span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
 										><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span
 										><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span
@@ -102,7 +104,7 @@
 									</div>
 								</div>
 								<div class="books-number">
-									<div class="flex flex-col digit transition-all">
+									<div class="flex flex-col digit no-select">
 										<span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span
 										><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span
 										><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span
@@ -162,15 +164,67 @@
 				<div class="flex justify-between w-full border-b-2 h-14 mb-6">
 					<strong><h1 class="text-4xl">Reviews</h1></strong>
 				</div>
-				<div class="flex flex-row justify-between h-[calc(100%-80px)] w-full">
-					<div class="scrollbar h-full w-2/3 overflow-y-scroll mr-4">
+				<div class="flex lg:flex-row flex-col justify-between h-[calc(100%-80px)] w-full">
+					<div class="scrollbar h-full w-full lg:w-2/3 overflow-y-scroll mr-4 order-2 lg:order-1">
 						<div class="" id="reviews-container"></div>
 					</div>
-					<div class="w-[calc(33%-12px)] h-full rounded-3xl bg-white p-4">
-						<div class="h-1/6">
+					<div class="w-full lg:w-[calc(33%-12px)] h-full rounded-3xl bg-white p-4 bg-opacity-40 order-1 lg:order-2 lg:mb-0 mb-4">
+						<div class="mb-4">
 							<h1 class="text-3xl font-bold pb-2">Write a review</h1>
 							<hr />
 						</div>
+						<form action="/api/reviews" method="post" id="add-review-form" class="flex flex-col justify-between h-[calc(100%-66px)]">
+							<div class="relative mb-4">
+								<div id="dropdown" class="absolute top-full w-full bg-slate-300 rounded-2xl"></div>
+								<input
+									name="title"
+									type="text"
+									placeholder="Search for books"
+									id="review-search"
+									class="focus:outline-none bg-white rounded-2xl w-full p-4"
+								/>
+							</div>
+							<div class="flex w-full flex-row xl:flex-col 2xl:flex-row justify-between items-center mb-4">
+								<input
+									name="rating"
+									type="number"
+									id="review-rating"
+									value="0"
+									max="5"
+									min="0"
+									step="0.1"
+									class="focus:outline-none bg-white rounded-2xl w-1/4 xl:w-full 2xl:w-1/4 p-4 h-full mr-4 xl:mr-0 2xl:mr-4 text-center mb-0 xl:mb-4 2xl:mb-0"
+								/>
+								<div class="bg-white rounded-2xl flex flex-row justify-between items-center p-4 flex-grow xl:w-full 2xl:w-auto">
+									<i class="fa-regular fa-star text-3xl cursor-pointer stars"></i>
+									<i class="fa-regular fa-star text-3xl cursor-pointer stars"></i>
+									<i class="fa-regular fa-star text-3xl cursor-pointer stars"></i>
+									<i class="fa-regular fa-star text-3xl cursor-pointer stars"></i>
+									<i class="fa-regular fa-star text-3xl cursor-pointer stars"></i>
+								</div>
+							</div>
+							<input
+								name="reviewer"
+								type="text"
+								placeholder="Reviewers name"
+								id="reviewer"
+								class="focus:outline-none bg-white rounded-2xl w-full p-4 mb-4"
+							/>
+							<textarea
+								name="text"
+								id="review-text"
+								class="grey-border rounded-2xl p-4 resize-none h-full focus:outline-none w-full scrollbar flex-grow mb-4"
+								placeholder="Write your review here..."
+							></textarea>
+							<div class="h-16 grid place-items-center">
+								<button
+									type="submit"
+									class="bg-white text-black py-2 px-4 rounded-full grey-border border-gray-300 hover:bg-gray-100 transition-all"
+								>
+									Submit
+								</button>
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>
@@ -200,6 +254,27 @@
 							<div class="flex flex-col pt-5">
 								<label for="categories" class="pb-2">Genre</label>
 								<input type="text" name="categories" id="book-genre" class="grey-border rounded-2xl p-2 focus:outline-none" />
+							</div>
+							<div class="flex items-center w-full pt-5 pb-5 md:pb-0">
+								<input type="checkbox" name="newrelease" id="book-newrelease" class="hidden" />
+								<label for="book-newrelease" class="cursor-pointer w-full">
+									<div
+										id="new-release-label"
+										class="w-full h-32 mr-2 rounded-2xl border bg-white border-gray-300 flex items-center justify-center transition-colors relative"
+									>
+										<h1 id="new-release-label-text" class="text-slate-800 text-xl transition-all no-select">New Release</h1>
+										<svg class="w-8 h-8 absolute top-0 left-0 transition-all opacity-0" viewBox="0 0 100 100" id="tick">
+											<g id="g6" transform="translate(-1.4,-1.4)" style="fill: #1d56b8">
+												<circle cx="50" cy="50" r="38" style="fill: #1d56b8" />
+												<polygon
+													points="44.1,58.3 31.8,45.9 28.8,48.9 44.1,64.2 69.5,38.8 66.6,35.8 "
+													id="polygon2"
+													style="fill: #ffffff"
+												/>
+											</g>
+										</svg>
+									</div>
+								</label>
 							</div>
 						</div>
 						<div class="h-full justify-between flex flex-col">

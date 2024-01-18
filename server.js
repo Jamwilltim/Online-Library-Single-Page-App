@@ -160,6 +160,52 @@ app.get("/api/reviews", (req, res) => {
 	res.send(reviews);
 });
 
+app.post("/api/reviews", async (req, res) => {
+	try {
+		let newReview = req.body;
+		const data = await fs.readFile("./src/json/reviews.json", "utf8");
+		let temp_reviews = JSON.parse(data);
+
+		const book = books.find((book) => book.title === newReview.title);
+		if (book) {
+			newReview.id = book._id;
+		} else {
+			throw new Error("Book not found");
+		}
+
+		temp_reviews.unshift(newReview);
+
+		await fs.writeFile("./src/json/reviews.json", JSON.stringify(temp_reviews, null, 2));
+		reviews = temp_reviews;
+		res.status(200).send("Review added successfully");
+	} catch (error) {
+		res.status(500).send("An error occurred");
+	}
+});
+
+app.delete("/api/reviews", async (req, res) => {
+	try {
+		const reviewToDelete = req.body;
+		const data = await fs.readFile("./src/json/reviews.json", "utf8");
+		const temp_reviews = JSON.parse(data);
+
+		// Find the review that needs to be deleted
+		const reviewIndex = temp_reviews.findIndex((review) => review.id === reviewToDelete.id);
+
+		// Delete the review
+		if (reviewIndex !== -1) {
+			temp_reviews.splice(reviewIndex, 1);
+		}
+
+		// Write the updated review data back to the file
+		await fs.writeFile("./src/json/reviews.json", JSON.stringify(temp_reviews, null, 2));
+		reviews = temp_reviews;
+		res.status(200).send("Review deleted successfully");
+	} catch (error) {
+		res.status(500).send("An error occurred");
+	}
+});
+
 // |-------------------- Aditional functions API --------------------|
 // Wildcard route to make sure that any request that doesn't match the ones above gets sent to index.html
 app.get("*", (req, res) => {

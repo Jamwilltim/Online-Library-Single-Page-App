@@ -35,7 +35,7 @@
 	background: rgba(255, 255, 255, 0.318);
 }
 
-* {
+.no-select {
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 	-webkit-tap-highlight-color: transparent;
 	-webkit-user-select: none;
@@ -73,6 +73,7 @@
 /* Custom scrollbar taken and editted from https://ishadeed.com/article/custom-scrollbars-css/ */
 .scrollbar::-webkit-scrollbar {
 	width: 6px;
+	height: 6px;
 }
 
 .scrollbar::-webkit-scrollbar-track {
@@ -115,4 +116,10 @@
 
 .refresh:hover {
 	animation: refresh 0.8s ease-out 1 forwards;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
 }
