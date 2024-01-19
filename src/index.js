@@ -15,11 +15,11 @@ const pages = document.querySelectorAll(".main-page");
 
 // Function to change the styling on the selcted page button
 const changeActiveButton = (newActiveButtonId) => {
-	let activeButton = document.querySelector(".active-button");
+	const activeButton = document.querySelector(".active-button");
 	if (activeButton) {
 		activeButton.classList.remove("active-button");
 	}
-	let newActiveButton = document.getElementById(newActiveButtonId);
+	const newActiveButton = document.getElementById(newActiveButtonId);
 	if (newActiveButton) {
 		newActiveButton.classList.add("active-button");
 	}
@@ -35,9 +35,9 @@ menuButtons.forEach((e) => {
 
 // Function to change the pages by adjusting their opacity, this allows for a fade transition
 const changePages = () => {
-	let currentPage = getCurrentPage();
+	const currentPage = getCurrentPage();
 	for (let i = 0; i < pages.length; i++) {
-		if (menuButtons[i].id == currentPage.concat("-button")) {
+		if (menuButtons[i].id === currentPage.concat("-button")) {
 			pages[i].classList.remove("opacity-0");
 			pages[i].classList.add("opacity-100");
 			pages[i].classList.add("z-10");
@@ -123,7 +123,7 @@ const digits = document.getElementsByClassName("digit");
 
 // Event listener for the refresh button
 refresh.addEventListener("click", async () => {
-	numberBooks = await getNumberOfBooks().catch((error) => console.error(error));
+	const numberBooks = await getNumberOfBooks().catch((error) => console.error(error));
 	refreshnumberBooks(numberBooks);
 });
 
@@ -134,8 +134,8 @@ const displaynumberBooks = async () => {
 	const num = await getNumberOfBooks().catch((error) => console.error(error));
 	const numArray = Array.from(String(num), Number);
 	for (let i = 0; i < digits.length; i++) {
-		let digit = digits[i];
-		let index = numArray[i];
+		const digit = digits[i];
+		const index = numArray[i];
 		digit.style.translate = `0 -${45 * (10 * i + index)}px`;
 	}
 };
@@ -144,10 +144,10 @@ const displaynumberBooks = async () => {
 const refreshnumberBooks = (num) => {
 	const numArray = Array.from(String(num), Number);
 	for (let i = 0; i < digits.length; i++) {
-		let digit = digits[i];
-		let index = numArray[i];
+		const digit = digits[i];
+		const index = numArray[i];
 		digit.style.transitionDuration = "0s";
-		digit.style.translate = `0 0`;
+		digit.style.translate = "0 0";
 		setTimeout(() => {
 			digit.style.transitionDuration = "2s";
 			digit.style.translate = `0 -${45 * (10 * i + index)}px`;
@@ -234,9 +234,9 @@ const createFavouriteElement = (book, container) => {
 			const response = await fetch("/api/updateFavourite", {
 				method: "POST",
 				headers: {
-					"Content-Type": "application/json",
+					"Content-Type": "application/json"
 				},
-				body: JSON.stringify(book),
+				body: JSON.stringify(book)
 			});
 
 			const data = await response.text();
@@ -364,9 +364,9 @@ const createBookElement = (book, books) => {
 			const response = await fetch("/api/updateFavourite", {
 				method: "POST",
 				headers: {
-					"Content-Type": "application/json",
+					"Content-Type": "application/json"
 				},
-				body: JSON.stringify(book),
+				body: JSON.stringify(book)
 			});
 
 			const data = await response.text();
@@ -402,9 +402,9 @@ const createBookElement = (book, books) => {
 				const response = await fetch("/api/books", {
 					method: "DELETE",
 					headers: {
-						"Content-Type": "application/json",
+						"Content-Type": "application/json"
 					},
-					body: JSON.stringify(book),
+					body: JSON.stringify(book)
 				});
 
 				renderBooks();
@@ -504,7 +504,7 @@ loadMore.classList.add("opacity-0"); // Hide the load more button
 
 // When the user scrolls to the bottom of the page, show the load more button
 booksOuterContainer.onscroll = () => {
-	if (document.getElementById("search").value == "") {
+	if (document.getElementById("search").value === "") {
 		if (booksOuterContainer.scrollTop + booksOuterContainer.clientHeight >= booksOuterContainer.scrollHeight - 30) {
 			loadMore.classList.remove("opacity-0");
 			loadMore.classList.add("opacity-70", "hover:opacity-100", "cursor-pointer");
@@ -530,9 +530,9 @@ const sendVariables = async (start, end) => {
 		const response = await fetch("/api/variables", {
 			method: "POST",
 			headers: {
-				"Content-Type": "application/json",
+				"Content-Type": "application/json"
 			},
-			body: JSON.stringify({ start, end }),
+			body: JSON.stringify({ start, end })
 		});
 
 		if (!response.ok) {
@@ -548,9 +548,9 @@ window.addEventListener("beforeunload", () => {
 	fetch("/api/variables", {
 		method: "POST",
 		headers: {
-			"Content-Type": "application/json",
+			"Content-Type": "application/json"
 		},
-		body: JSON.stringify({ start: 0, end: 40 }),
+		body: JSON.stringify({ start: 0, end: 40 })
 	});
 });
 
@@ -558,7 +558,7 @@ window.addEventListener("beforeunload", () => {
 const search = document.getElementById("search");
 
 search.addEventListener("keyup", async (e) => {
-	text = e.target.value;
+	const text = e.target.value;
 
 	const results = await searchBooks(text);
 
@@ -676,9 +676,9 @@ const createReviewElement = (review, reviews) => {
 				const response = await fetch("/api/reviews", {
 					method: "DELETE",
 					headers: {
-						"Content-Type": "application/json",
+						"Content-Type": "application/json"
 					},
-					body: JSON.stringify(review),
+					body: JSON.stringify(review)
 				});
 
 				renderReviews();
@@ -754,7 +754,7 @@ const reviewSearch = document.getElementById("review-search");
 const dropdown = document.getElementById("dropdown");
 
 reviewSearch.addEventListener("keyup", async (e) => {
-	text = e.target.value;
+	const text = e.target.value;
 	dropdown.innerHTML = "";
 
 	const results = await searchBooks(text);
@@ -835,7 +835,7 @@ reviewRating.addEventListener("keyup", () => {
 	}
 
 	if ((reviewRating.value * 10) % 1 !== 0) {
-		temp = Math.floor(reviewRating.value * 10);
+		const temp = Math.floor(reviewRating.value * 10);
 		reviewRating.value = temp / 10;
 	}
 
@@ -864,9 +864,9 @@ reviewForm.onsubmit = async (e) => {
 		const response = await fetch("/api/reviews", {
 			method: "POST",
 			headers: {
-				"Content-Type": "application/json",
+				"Content-Type": "application/json"
 			},
-			body: JSON.stringify(review),
+			body: JSON.stringify(review)
 		});
 
 		if (!response.ok) {
@@ -893,9 +893,9 @@ form.onsubmit = async (e) => {
 		const response = await fetch("/api/books", {
 			method: "POST",
 			headers: {
-				"Content-Type": "application/json",
+				"Content-Type": "application/json"
 			},
-			body: JSON.stringify(book),
+			body: JSON.stringify(book)
 		});
 
 		addBooktoLibrary(book);

@@ -69,19 +69,19 @@ app.post("/api/books", async (req, res) => {
 	try {
 		const newBook = req.body;
 		const data = await fs.readFile("./src/json/books.json", "utf8");
-		const temp_books = JSON.parse(data);
+		const tempBooks = JSON.parse(data);
 
 		// Set the id of the new book to be one more than the id of the last book in the array
-		newBook._id = books[temp_books.length - 1]._id + 1;
+		newBook._id = books[tempBooks.length - 1]._id + 1;
 
 		// Set the authors to be listed in an array
 		newBook.authors = newBook.authors.split(",");
 
 		console.log(newBook);
-		temp_books.push(newBook);
+		tempBooks.push(newBook);
 
-		await fs.writeFile("./src/json/books.json", JSON.stringify(temp_books, null, 2));
-		books = temp_books;
+		await fs.writeFile("./src/json/books.json", JSON.stringify(tempBooks, null, 2));
+		books = tempBooks;
 		res.status(200).send("Book added successfully");
 	} catch (error) {
 		res.status(500).send("An error occurred");
@@ -93,19 +93,19 @@ app.post("/api/updateFavourite", async (req, res) => {
 	try {
 		const updatedBook = req.body;
 		const data = await fs.readFile("./src/json/books.json", "utf8");
-		const temp_books = JSON.parse(data);
+		const tempBooks = JSON.parse(data);
 
 		// Find the book that needs to be updated
-		const bookIndex = temp_books.findIndex((book) => book._id === updatedBook._id);
+		const bookIndex = tempBooks.findIndex((book) => book._id === updatedBook._id);
 
 		// Update the 'favourited' property of the book
 		if (bookIndex !== -1) {
-			temp_books[bookIndex].favourited = updatedBook.favourited;
+			tempBooks[bookIndex].favourited = updatedBook.favourited;
 		}
 
 		// Write the updated book data back to the file
-		await fs.writeFile("./src/json/books.json", JSON.stringify(temp_books, null, 2));
-		books = temp_books;
+		await fs.writeFile("./src/json/books.json", JSON.stringify(tempBooks, null, 2));
+		books = tempBooks;
 		res.status(200).send("Book updated successfully");
 	} catch (error) {
 		res.status(500).send("An error occurred");
@@ -117,19 +117,19 @@ app.delete("/api/books", async (req, res) => {
 	try {
 		const bookToDelete = req.body;
 		const data = await fs.readFile("./src/json/books.json", "utf8");
-		const temp_books = JSON.parse(data);
+		const tempBooks = JSON.parse(data);
 
 		// Find the book that needs to be deleted
-		const bookIndex = temp_books.findIndex((book) => book._id === bookToDelete._id);
+		const bookIndex = tempBooks.findIndex((book) => book._id === bookToDelete._id);
 
 		// Delete the book
 		if (bookIndex !== -1) {
-			temp_books.splice(bookIndex, 1);
+			tempBooks.splice(bookIndex, 1);
 		}
 
 		// Write the updated book data back to the file
-		await fs.writeFile("./src/json/books.json", JSON.stringify(temp_books, null, 2));
-		books = temp_books;
+		await fs.writeFile("./src/json/books.json", JSON.stringify(tempBooks, null, 2));
+		books = tempBooks;
 		res.status(200).send("Book deleted successfully");
 	} catch (error) {
 		res.status(500).send("An error occurred");
@@ -162,9 +162,9 @@ app.get("/api/reviews", (req, res) => {
 
 app.post("/api/reviews", async (req, res) => {
 	try {
-		let newReview = req.body;
+		const newReview = req.body;
 		const data = await fs.readFile("./src/json/reviews.json", "utf8");
-		let temp_reviews = JSON.parse(data);
+		const tempReviews = JSON.parse(data);
 
 		const book = books.find((book) => book.title === newReview.title);
 		if (book) {
@@ -173,10 +173,10 @@ app.post("/api/reviews", async (req, res) => {
 			throw new Error("Book not found");
 		}
 
-		temp_reviews.unshift(newReview);
+		tempReviews.unshift(newReview);
 
-		await fs.writeFile("./src/json/reviews.json", JSON.stringify(temp_reviews, null, 2));
-		reviews = temp_reviews;
+		await fs.writeFile("./src/json/reviews.json", JSON.stringify(tempReviews, null, 2));
+		reviews = tempReviews;
 		res.status(200).send("Review added successfully");
 	} catch (error) {
 		res.status(500).send("An error occurred");
@@ -187,19 +187,19 @@ app.delete("/api/reviews", async (req, res) => {
 	try {
 		const reviewToDelete = req.body;
 		const data = await fs.readFile("./src/json/reviews.json", "utf8");
-		const temp_reviews = JSON.parse(data);
+		const tempReviews = JSON.parse(data);
 
 		// Find the review that needs to be deleted
-		const reviewIndex = temp_reviews.findIndex((review) => review.id === reviewToDelete.id);
+		const reviewIndex = tempReviews.findIndex((review) => review.id === reviewToDelete.id);
 
 		// Delete the review
 		if (reviewIndex !== -1) {
-			temp_reviews.splice(reviewIndex, 1);
+			tempReviews.splice(reviewIndex, 1);
 		}
 
 		// Write the updated review data back to the file
-		await fs.writeFile("./src/json/reviews.json", JSON.stringify(temp_reviews, null, 2));
-		reviews = temp_reviews;
+		await fs.writeFile("./src/json/reviews.json", JSON.stringify(tempReviews, null, 2));
+		reviews = tempReviews;
 		res.status(200).send("Review deleted successfully");
 	} catch (error) {
 		res.status(500).send("An error occurred");

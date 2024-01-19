@@ -5,13 +5,13 @@ module.exports = {
 	theme: {
 		extend: {
 			backgroundImage: {
-				"light-image": "url('img/gradient-background.jpg')",
+				"light-image": "url('img/gradient-background.jpg')"
 			},
 			screens: {
 				"1080p": "1920px",
-				"1440p": "2560px",
-			},
-		},
+				"1440p": "2560px"
+			}
+		}
 	},
-	plugins: [],
+	plugins: []
 };
