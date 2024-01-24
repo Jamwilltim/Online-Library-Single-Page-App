@@ -109,10 +109,9 @@ const refresh = document.getElementById("refresh-button");
 
 const getNumberOfBooks = async () => {
 	try {
-		const response = await fetch("/json/books.json");
+		const response = await fetch("/api/books/length");
 		const data = await response.json();
-		const numberOfBooks = data.length;
-		return numberOfBooks;
+		return data.total;
 	} catch (error) {
 		console.error("Error fetching number of books data:", error);
 		throw error;
@@ -229,18 +228,28 @@ const createFavouriteElement = (book, container) => {
 		book.favourited = !book.favourited;
 		container.removeChild(bookContainer); // Remove the book from the favourites
 
+		const heartIcon = document.getElementById(`favourite-icon-${book._id}`);
+
+		if (book.favourited) {
+			heartIcon.classList.remove("fa-regular");
+			heartIcon.classList.add("fa-solid", "text-red-500");
+		} else {
+			heartIcon.classList.remove("fa-solid", "text-red-500");
+			heartIcon.classList.add("fa-regular");
+		}
+
 		// Send a POST request to the server-side script
 		try {
-			const response = await fetch("/api/updateFavourite", {
+			const response = await fetch(`/api/updateFavourite/${book._id}`, {
 				method: "POST",
 				headers: {
-					"Content-Type": "application/json"
+					"Content-Type": "application/json",
 				},
-				body: JSON.stringify(book)
+				body: JSON.stringify({ favourited: book.favourited }),
 			});
 
-			const data = await response.text();
-			console.log("Success:", data);
+			const data = await response.json();
+			console.log("Success:", data.message);
 		} catch (error) {
 			console.error("Error:", error);
 		}
@@ -289,7 +298,20 @@ const renderBooks = async () => {
 		booksArray.forEach((book) => {
 			createBookElement(book, books);
 		});
-		sendVariables(start + 40, end + 40); // Send the updated start and end variables to the server
+		start += 40;
+		end += 40;
+		if (end > (await getNumberOfBooks())) {
+			end = await getNumberOfBooks();
+			if (start > end) {
+				start = end;
+				sendVariables(start, end);
+				loadMore.classList.add("hidden");
+			} else {
+				sendVariables(start, end);
+			}
+		} else {
+			sendVariables(start, end);
+		}
 	} catch (error) {
 		console.error("Error rendering the books:", error);
 	}
@@ -337,6 +359,7 @@ const createBookElement = (book, books) => {
 	// Create a heart button to toggle whether the book is favourited
 	const favouriteButton = document.createElement("button");
 	const favouriteIcon = document.createElement("i");
+	favouriteIcon.id = `favourite-icon-${book._id}`;
 
 	// Check if the book is favourited
 	if (book.favourited) {
@@ -361,16 +384,16 @@ const createBookElement = (book, books) => {
 
 		// Send a POST request to the server-side script
 		try {
-			const response = await fetch("/api/updateFavourite", {
+			const response = await fetch(`/api/updateFavourite/${book._id}`, {
 				method: "POST",
 				headers: {
-					"Content-Type": "application/json"
+					"Content-Type": "application/json",
 				},
-				body: JSON.stringify(book)
+				body: JSON.stringify({ favourited: book.favourited }),
 			});
 
-			const data = await response.text();
-			console.log("Success:", data);
+			const data = await response.json();
+			console.log("Success:", data.message);
 
 			// If the book is favourited, add it to the favourites section
 			renderFavourites();
@@ -399,15 +422,13 @@ const createBookElement = (book, books) => {
 		// If the user clicked OK, delete the book
 		if (confirmDelete) {
 			try {
-				const response = await fetch("/api/books", {
+				const response = await fetch(`/api/books/${book._id}`, {
 					method: "DELETE",
 					headers: {
-						"Content-Type": "application/json"
+						"Content-Type": "application/json",
 					},
-					body: JSON.stringify(book)
 				});
 
-				renderBooks();
 				if (book.newrelease) {
 					renderNewReleases();
 				}
@@ -416,8 +437,8 @@ const createBookElement = (book, books) => {
 					throw new Error(`HTTP error! status: ${response.status}`);
 				} else {
 					books.removeChild(bookContainer); // Remove the book from the library
-					const data = await response.text();
-					console.log("Success:", data);
+					const data = await response.json();
+					console.log("Success:", data.message);
 				}
 			} catch (error) {
 				console.error("Error:", error);
@@ -483,17 +504,8 @@ const createBookElement = (book, books) => {
 	books.appendChild(bookContainer); // Append the whole card
 };
 
-// When the library page link is clicked, render the books
-const libraryButton = document.getElementById("library-button");
-
-libraryButton.addEventListener("click", () => {
-	renderBooks();
-});
-
 window.onload = () => {
-	if (getCurrentPage() === "library") {
-		renderBooks();
-	}
+	renderBooks();
 };
 
 // Load more books
@@ -530,13 +542,14 @@ const sendVariables = async (start, end) => {
 		const response = await fetch("/api/variables", {
 			method: "POST",
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ start, end })
+			body: JSON.stringify({ start, end }),
 		});
 
 		if (!response.ok) {
-			throw new Error(`HTTP error! status: ${response.status}`);
+			const text = await response.json();
+			throw new Error(`HTTP error! status: ${response.status}, ${text.message}`);
 		}
 	} catch (error) {
 		console.error("Error posting book indices:", error);
@@ -548,9 +561,9 @@ window.addEventListener("beforeunload", () => {
 	fetch("/api/variables", {
 		method: "POST",
 		headers: {
-			"Content-Type": "application/json"
+			"Content-Type": "application/json",
 		},
-		body: JSON.stringify({ start: 0, end: 40 })
+		body: JSON.stringify({ start: 0, end: 40 }),
 	});
 });
 
@@ -578,7 +591,7 @@ const searchBooks = async (text) => {
 	}
 
 	try {
-		const response = await fetch(`/api/search?book=${encodeURIComponent(text)}`);
+		const response = await fetch(`/api/search?book=${text}`);
 		const books = await response.json();
 
 		// Sort the books based on the similarity to the search text
@@ -654,6 +667,8 @@ const renderReviews = async () => {
 };
 
 const createReviewElement = (review, reviews) => {
+	const reviewContainer = document.createElement("div");
+	reviewContainer.classList.add("bg-white", "rounded-3xl", "w-[calc(100%-5px)]", "p-8", "max-h-80", "mb-4");
 	// Create the top bar
 	const topBar = document.createElement("div");
 	topBar.classList.add("h-1/5", "flex", "justify-between", "items-center", "pb-4");
@@ -673,22 +688,19 @@ const createReviewElement = (review, reviews) => {
 		// If the user clicked OK, delete the review
 		if (confirmDelete) {
 			try {
-				const response = await fetch("/api/reviews", {
+				const response = await fetch(`/api/reviews/${review.id}`, {
 					method: "DELETE",
 					headers: {
-						"Content-Type": "application/json"
+						"Content-Type": "application/json",
 					},
-					body: JSON.stringify(review)
 				});
-
-				renderReviews();
 
 				if (!response.ok) {
 					throw new Error(`HTTP error! status: ${response.status}`);
 				} else {
 					reviews.removeChild(reviewContainer); // Remove the review from the reviews
-					const data = await response.text();
-					console.log("Success:", data);
+					const data = await response.json();
+					console.log("Success:", data.message);
 				}
 			} catch (error) {
 				console.error("Error:", error);
@@ -739,8 +751,7 @@ const createReviewElement = (review, reviews) => {
 	reviewText.appendChild(text);
 
 	// Append the top bar and review text to the review container
-	const reviewContainer = document.createElement("div");
-	reviewContainer.classList.add("bg-white", "rounded-3xl", "w-[calc(100%-5px)]", "p-8", "max-h-80", "mb-4");
+
 	reviewContainer.appendChild(topBar);
 	reviewContainer.appendChild(reviewText);
 
@@ -864,15 +875,14 @@ reviewForm.onsubmit = async (e) => {
 		const response = await fetch("/api/reviews", {
 			method: "POST",
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify(review)
+			body: JSON.stringify(review),
 		});
 
 		if (!response.ok) {
 			throw new Error(`HTTP error! status: ${response.status}`);
 		} else {
-			console.log("Review added successfully");
 			reviewForm.reset();
 			renderReviews();
 		}
@@ -893,9 +903,9 @@ form.onsubmit = async (e) => {
 		const response = await fetch("/api/books", {
 			method: "POST",
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify(book)
+			body: JSON.stringify(book),
 		});
 
 		addBooktoLibrary(book);
@@ -903,12 +913,14 @@ form.onsubmit = async (e) => {
 		if (!response.ok) {
 			throw new Error(`HTTP error! status: ${response.status}`);
 		} else {
-			console.log("Book added successfully");
+			const text = await response.json();
+			console.log(text.message);
 			form.reset();
 
 			sendVariables(0, 40);
 
 			document.getElementById("books-container").innerHTML = "";
+			loadMore.classList.remove("hidden");
 			renderBooks();
 			renderNewReleases();
 		}
@@ -945,3 +957,5 @@ newReleaseButton.addEventListener("change", () => {
 		tick.classList.add("opacity-0");
 	}
 });
+
+// |-------------------- Check server connection --------------------|

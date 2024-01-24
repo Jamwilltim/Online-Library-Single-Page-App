@@ -33,3 +33,9 @@ npm run server
 ```
 
 ## Documentation
+
+The documentation can be found here
+
+```
+https://james-harvey.gitbook.io/api-reference-index/
+```

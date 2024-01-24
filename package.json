@@ -5,7 +5,7 @@
 	"scripts": {
 		"server": "nodemon server.js",
 		"start": "node server.js",
-		"pretest": "eslint .",
+		"pretest": "eslint . --fix",
 		"test": "jest"
 	},
 	"keywords": [],
