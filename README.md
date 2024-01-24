@@ -34,4 +34,4 @@ npm run server
 
 ## Documentation
 
-The documentation can be found here: [Link Text](URL)https://james-harvey.gitbook.io/api-reference-index/
+The documentation can be found [here](https://james-harvey.gitbook.io/api-reference-index/)
