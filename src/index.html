@@ -80,9 +80,9 @@
 				<div class="flex justify-between w-full border-b-2 h-14 mb-6">
 					<strong><h1 class="text-4xl">Home</h1></strong>
 				</div>
-				<div class="scrollbar h-[calc(100%-80px)] grid md:grid-cols-2 gap-2 w-full overflow-y-scroll">
-					<div class="md:grid md:grid-rows-3 md:gap-2 flex flex-col">
-						<div class="bg-white opacity-75 rounded-3xl md:row-span-2 mb-3 md:mb-0 p-5 overflow-hidden">
+				<div class="scrollbar h-[calc(100%-80px)] md:grid md:grid-cols-2 md:gap-2 w-full overflow-y-scroll flex flex-col">
+					<div class="md:grid md:grid-rows-3 md:gap-2 md:w-auto flex flex-col justify-between items-center w-full pb-4 md:pb-0">
+						<div class="bg-white opacity-75 rounded-3xl md:row-span-2 mb-3 md:mb-0 h-full p-5 overflow-hidden w-full">
 							<div class="h-1/6">
 								<h1 class="text-3xl font-bold pb-2">New Releases</h1>
 								<hr />
@@ -91,7 +91,7 @@
 								<div id="new-releases-container" class="flex justify-start flex-row items-center"></div>
 							</div>
 						</div>
-						<div class="bg-white opacity-75 rounded-3xl md:h-auto p-5 overflow-hidden flex flex-col items-center">
+						<div class="bg-white opacity-75 rounded-3xl p-5 overflow-hidden flex flex-col items-center w-full md:h-full h-auto">
 							<div class="h-auto w-full flex flex-row justify-between items-center">
 								<h1 class="text-3xl font-bold pb-2">Number of books</h1>
 								<div class="h-full flex items-center cursor-pointer refresh" id="refresh-button">
@@ -130,7 +130,7 @@
 							<div class="h-auto pt-3">in our library</div>
 						</div>
 					</div>
-					<div class="bg-white opacity-75 md:overflow-hidden rounded-3xl p-5 h-full">
+					<div class="bg-white opacity-75 md:overflow-hidden rounded-3xl p-5">
 						<div class="h-10">
 							<h1 class="text-3xl font-bold pb-2">Favourites</h1>
 							<hr />

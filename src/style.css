@@ -888,10 +888,6 @@ video {
   justify-content: space-around;
 }
 
-.gap-2 {
-  gap: 0.5rem;
-}
-
 .overflow-hidden {
   overflow: hidden;
 }
@@ -1360,8 +1356,12 @@ video {
     display: grid;
   }
 
-  .md\:h-auto {
-    height: auto;
+  .md\:h-full {
+    height: 100%;
+  }
+
+  .md\:w-auto {
+    width: auto;
   }
 
   .md\:grid-cols-2 {
