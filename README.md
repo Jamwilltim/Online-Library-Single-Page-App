@@ -32,6 +32,10 @@ The command to run the server with `nodemon` is
 npm run server
 ```
 
+## Testing
+
+Duplicate files have been made in the `/test` folder, these files are altered during the running of the test cases
+
 ## Documentation
 
 The documentation can be found [here](https://james-harvey.gitbook.io/api-reference-index/)
