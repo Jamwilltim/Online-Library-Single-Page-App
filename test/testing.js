@@ -2,14 +2,14 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs").promises;
 
-let books = require("./src/json/books.json");
+let books = require("./test-books.json");
 
-let reviews = require("./src/json/reviews.json");
+let reviews = require("./test-reviews.json");
 
-const app = express();
+const test = express();
 
-app.use(express.json());
-app.use(express.static(path.join(__dirname, "/src")));
+test.use(express.json());
+test.use(express.static(path.join(__dirname, "/src")));
 
 for (const book of books) {
 	if (book.authors.length > 3) {
@@ -19,7 +19,7 @@ for (const book of books) {
 
 // |-------------------- Home page API --------------------|
 // New releases API
-app.get("/api/newreleases", (req, res) => {
+test.get("/api/newreleases", (req, res) => {
 	const newReleases = [];
 	for (const book of books) {
 		if (book.newrelease) {
@@ -33,7 +33,7 @@ app.get("/api/newreleases", (req, res) => {
 });
 
 // GET method for favourites
-app.get("/api/favourites", (req, res) => {
+test.get("/api/favourites", (req, res) => {
 	const favourites = [];
 	for (const book of books) {
 		if (book.favourited) {
@@ -49,7 +49,7 @@ app.get("/api/favourites", (req, res) => {
 });
 
 // GET method for number of books
-app.get("/api/books/length", (req, res) => {
+test.get("/api/books/length", (req, res) => {
 	if (books.length === 0) {
 		res.status(404).send({ message: "No books found" });
 	}
@@ -62,7 +62,7 @@ app.get("/api/books/length", (req, res) => {
 let start = 0;
 let end = 40;
 
-app.get("/api/books/:id", (req, res) => {
+test.get("/api/books/:id", (req, res) => {
 	const book = books.find((book) => book._id === parseInt(req.params.id));
 	if (!book) {
 		res.status(404).send({ message: "Book not found" });
@@ -72,7 +72,7 @@ app.get("/api/books/:id", (req, res) => {
 	}
 });
 
-app.get("/api/books/:id/reviews", (req, res) => {
+test.get("/api/books/:id/reviews", (req, res) => {
 	const bookReviews = [];
 	for (const review of reviews) {
 		if (review.id === parseInt(req.params.id)) {
@@ -92,7 +92,7 @@ app.get("/api/books/:id/reviews", (req, res) => {
 	res.status(200);
 });
 
-app.get("/api/books", (req, res) => {
+test.get("/api/books", (req, res) => {
 	if (books.length === 0) {
 		res.status(404).send({ message: "No books found" });
 	}
@@ -103,7 +103,7 @@ app.get("/api/books", (req, res) => {
 });
 
 // Send variables to client side code
-app.get("/api/variables", (req, res) => {
+test.get("/api/variables", (req, res) => {
 	if (start === undefined || end === undefined) {
 		res.status(404).send({ message: "Variables not found" });
 	}
@@ -112,7 +112,7 @@ app.get("/api/variables", (req, res) => {
 });
 
 // POST method to update variables
-app.post("/api/variables", (req, res) => {
+test.post("/api/variables", (req, res) => {
 	if (req.body.start === undefined || req.body.end === undefined) {
 		res.status(404).send({ message: "Variables not found" });
 	}
@@ -139,9 +139,9 @@ app.post("/api/variables", (req, res) => {
 });
 
 // POST method to update a book's 'favourited' property
-app.post("/api/updateFavourite/:id", async (req, res) => {
+test.post("/api/updateFavourite/:id", async (req, res) => {
 	try {
-		const data = await fs.readFile("./src/json/books.json", "utf8");
+		const data = await fs.readFile("test/test-books.json", "utf8");
 		const tempBooks = JSON.parse(data);
 
 		const id = Number(req.params.id);
@@ -159,7 +159,7 @@ app.post("/api/updateFavourite/:id", async (req, res) => {
 		}
 
 		// Write the updated book data back to the file
-		await fs.writeFile("./src/json/books.json", JSON.stringify(tempBooks, null, 2));
+		await fs.writeFile("test/test-books.json", JSON.stringify(tempBooks, null, 2));
 		books = tempBooks;
 		res.status(200).send({ message: "Book updated successfully" });
 	} catch (error) {
@@ -168,9 +168,9 @@ app.post("/api/updateFavourite/:id", async (req, res) => {
 });
 
 // POST method to delete a book
-app.delete("/api/books/:id", async (req, res) => {
+test.delete("/api/books/:id", async (req, res) => {
 	try {
-		const data = await fs.readFile("./src/json/books.json", "utf8");
+		const data = await fs.readFile("test/test-books.json", "utf8");
 		const tempBooks = JSON.parse(data);
 
 		const id = Number(req.params.id);
@@ -200,7 +200,7 @@ app.delete("/api/books/:id", async (req, res) => {
 		}
 
 		// Write the updated book data back to the file
-		await fs.writeFile("./src/json/books.json", JSON.stringify(tempBooks, null, 2));
+		await fs.writeFile("test/test-books.json", JSON.stringify(tempBooks, null, 2));
 		books = tempBooks;
 		res.status(200).send({ message: "Book deleted successfully" });
 	} catch (error) {
@@ -209,7 +209,7 @@ app.delete("/api/books/:id", async (req, res) => {
 });
 
 // GET method to search for books
-app.get("/api/search", (req, res) => {
+test.get("/api/search", (req, res) => {
 	const results = [];
 	const title = req.query.book.toLowerCase();
 
@@ -231,17 +231,17 @@ app.get("/api/search", (req, res) => {
 
 // |-------------------- Reviews page API --------------------|
 // GET method for reviews
-app.get("/api/reviews/", (req, res) => {
+test.get("/api/reviews/", (req, res) => {
 	if (reviews.length === 0) {
 		res.status(404).send({ message: "No reviews found" });
 	}
 	res.status(200).send(reviews);
 });
 
-app.post("/api/reviews", async (req, res) => {
+test.post("/api/reviews", async (req, res) => {
 	try {
 		const newReview = req.body;
-		const data = await fs.readFile("./src/json/reviews.json", "utf8");
+		const data = await fs.readFile("test/test-reviews.json", "utf8");
 		const tempReviews = JSON.parse(data);
 
 		const book = books.find((book) => book.title === newReview.title);
@@ -256,7 +256,7 @@ app.post("/api/reviews", async (req, res) => {
 
 		tempReviews.unshift(newReview);
 
-		await fs.writeFile("./src/json/reviews.json", JSON.stringify(tempReviews, null, 2));
+		await fs.writeFile("test/test-reviews.json", JSON.stringify(tempReviews, null, 2));
 		reviews = tempReviews;
 		res.status(200).send({ message: "Review added successfully" });
 	} catch (error) {
@@ -264,9 +264,9 @@ app.post("/api/reviews", async (req, res) => {
 	}
 });
 
-app.delete("/api/reviews/:id", async (req, res) => {
+test.delete("/api/reviews/:id", async (req, res) => {
 	try {
-		const data = await fs.readFile("./src/json/reviews.json", "utf8");
+		const data = await fs.readFile("test/test-reviews.json", "utf8");
 		const tempReviews = JSON.parse(data);
 
 		const id = Number(req.params.id);
@@ -277,10 +277,15 @@ app.delete("/api/reviews/:id", async (req, res) => {
 
 		// Find the review that needs to be deleted
 		const review = tempReviews.findIndex((review) => review.id === id);
+		if (!review) {
+			res.status(404).send({ message: "Review not found" });
+			return;
+		}
+
 		tempReviews.splice(review, 1);
 
 		// Write the updated review data back to the file
-		await fs.writeFile("./src/json/reviews.json", JSON.stringify(tempReviews, null, 2));
+		await fs.writeFile("test/test-reviews.json", JSON.stringify(tempReviews, null, 2));
 		reviews = tempReviews;
 		res.status(200).send({ message: "Review deleted successfully" });
 	} catch (error) {
@@ -290,10 +295,10 @@ app.delete("/api/reviews/:id", async (req, res) => {
 
 // |-------------------- Administrator page API --------------------|
 // POST method to update books
-app.post("/api/books", async (req, res) => {
+test.post("/api/books", async (req, res) => {
 	try {
 		const newBook = req.body;
-		const data = await fs.readFile("./src/json/books.json", "utf8");
+		const data = await fs.readFile("test/test-books.json", "utf8");
 		const tempBooks = JSON.parse(data);
 
 		// Set the id of the new book to be one more than the id of the last book in the array
@@ -305,7 +310,7 @@ app.post("/api/books", async (req, res) => {
 
 		tempBooks.push(newBook);
 
-		await fs.writeFile("./src/json/books.json", JSON.stringify(tempBooks, null, 2));
+		await fs.writeFile("test/test-books.json", JSON.stringify(tempBooks, null, 2));
 		books = tempBooks;
 		res.status(201).send({ message: "Book added successfully" });
 	} catch (error) {
@@ -316,9 +321,9 @@ app.post("/api/books", async (req, res) => {
 // |-------------------- Aditional functions API --------------------|
 
 // Wildcard route to make sure that any request that doesn't match the ones above gets sent to index.html
-app.get("*", (req, res) => {
+test.get("*", (req, res) => {
 	res.sendFile(path.join(__dirname, "/src/index.html"));
 });
 
-// |-------------------- Export the app to the server.js file --------------------|
-module.exports = app;
+// |-------------------- Export the test to the server.js file --------------------|
+module.exports = test;

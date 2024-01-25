@@ -430,6 +430,7 @@ const createBookElement = (book, books) => {
 				});
 
 				if (book.newrelease) {
+					document.getElementById("new-releases-container").innerHTML = "";
 					renderNewReleases();
 				}
 
@@ -922,7 +923,10 @@ form.onsubmit = async (e) => {
 			document.getElementById("books-container").innerHTML = "";
 			loadMore.classList.remove("hidden");
 			renderBooks();
-			renderNewReleases();
+			if (book.newrelease) {
+				document.getElementById("new-releases-container").innerHTML = "";
+				renderNewReleases();
+			}
 		}
 	} catch (error) {
 		console.error("Error adding new book:", error);
@@ -959,3 +963,26 @@ newReleaseButton.addEventListener("change", () => {
 });
 
 // |-------------------- Check server connection --------------------|
+const overlay = document.getElementById("overlay");
+
+const checkServerStatus = async () => {
+	try {
+		const response = await fetch("/");
+
+		if (!response.ok) {
+			throw new Error("Server is not reachable");
+		}
+
+		// Server is reachable
+		overlay.classList.add("hidden");
+		overlay.classList.remove("flex");
+	} catch (error) {
+		// Server is not reachable
+		overlay.classList.add("flex");
+		overlay.classList.remove("hidden");
+		console.error(error.message);
+	}
+};
+
+// Check server status periodically
+setInterval(checkServerStatus, 5000);
