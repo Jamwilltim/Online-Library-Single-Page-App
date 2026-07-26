@@ -1,6 +1,6 @@
 # Online Library
 
-Created by James harvey for Programming (black) individual coursework
+Created by James Harvey for Programming (Black) individual coursework
 
 ## Loading website
 
